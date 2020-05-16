@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -24,11 +26,11 @@ public class AccountServiceImpl implements AccountService {
         BeanUtils.copyProperties(userVO,user);
         try {
             accountMapper.createNewAccount(user);
+            return ResponseVO.buildSuccess();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseVO.buildFailure(ACCOUNT_EXIST);
         }
-        return ResponseVO.buildSuccess();
     }
 
     @Override

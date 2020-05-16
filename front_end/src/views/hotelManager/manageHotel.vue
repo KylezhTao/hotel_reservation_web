@@ -61,6 +61,7 @@
         <Coupon></Coupon>
     </div>
 </template>
+
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import AddHotelModal from './components/addHotelModal'

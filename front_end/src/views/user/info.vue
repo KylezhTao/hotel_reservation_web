@@ -24,15 +24,47 @@
                         />
                         <span v-else>{{ userInfo.phoneNumber}}</span>
                     </a-form-item>
+                    <a-form-item label="生日" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
+                        <a-date-picker
+                                :default-value="moment(userInfo.birthday)"
+                                v-if="modify"
+                                v-decorator="['birthday', { rules: [{ required: false}] }]"
+                                disabled
+                        />
+                        <span v-else>{{ userInfo.birthday}}</span>
+                    </a-form-item>
                     <a-form-item label="信用值" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
                         <span>{{ userInfo.credit }}</span>
                     </a-form-item>
-                    <a-form-item label="密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="modify">
+                    <a-form-item v-if="modify" :label-col="{span: 4}" :wrapper-col="{span: 8, offset: 4}">
+                        <a-checkbox :checked="checkPassword" @change="handleChange">
+                            若想修改密码，请勾选此项
+                        </a-checkbox>
+                    </a-form-item>
+                    <a-form-item label="新密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="checkPassword && modify">
                         <a-input
                             placeholder="请输入新密码"
-                            v-decorator="['password', { rules: [{ required: true, message: '请输入新密码' }] }]"
+                            v-decorator="['password', {
+                                rules: [
+                                    { required: checkPassword, message: '请输入新密码' },
+                                    { validator: validateToNextPassword },
+                                ]
+                            }]"
                         />
                     </a-form-item>
+                    <a-form-item label="确认新密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="checkPassword && modify" has-feedback>
+                        <a-input
+                                placeholder="请确认新密码"
+                                v-decorator="['confirm', {
+                                    rules: [
+                                        { required: checkPassword, message: '请确认新密码' },
+                                        { validator: compareToFirstPassword },
+                                    ]
+                                }]"
+                                @blur="handleConfirmBlur"
+                        />
+                    </a-form-item>
+
                     <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">
                         <a-button type="primary" @click="saveModify">
                             保存
@@ -48,6 +80,7 @@
                     </a-form-item>
                 </a-form>
             </a-tab-pane>
+
             <a-tab-pane tab="我的订单" key="2">
                 <a-table
                     :columns="columns"
@@ -58,23 +91,23 @@
                         <span>￥{{ text }}</span>
                     </span>
                     <span slot="roomType" slot-scope="text">
-                        <span v-if="text == 'BigBed'">大床房</span>
-                        <span v-if="text == 'DoubleBed'">双床房</span>
-                        <span v-if="text == 'Family'">家庭房</span>
+                        <span v-if="text === 'BigBed'">大床房</span>
+                        <span v-if="text === 'DoubleBed'">双床房</span>
+                        <span v-if="text === 'Family'">家庭房</span>
                     </span>
                     <a-tag slot="orderState" color="blue" slot-scope="text">
                         {{ text }}
                     </a-tag>
                     <span slot="action" slot-scope="record">
                         <a-button type="primary" size="small">查看</a-button>
-                        <a-divider type="vertical" v-if="record.orderState == '已预订'"></a-divider>
+                        <a-divider type="vertical" v-if="record.orderState === '已预订'"></a-divider>
                         <a-popconfirm
                             title="你确定撤销该笔订单吗？"
                             @confirm="confirmCancelOrder(record.id)"
                             @cancel="cancelCancelOrder"
                             okText="确定"
                             cancelText="取消"
-                            v-if="record.orderState == '已预订'"
+                            v-if="record.orderState === '已预订'"
                         >
                             <a-button type="danger" size="small">撤销</a-button>
                         </a-popconfirm>
@@ -82,11 +115,16 @@
                     </span>
                 </a-table>
             </a-tab-pane>
+
+            <a-tab-pane tab="信用记录" key="3">
+
+            </a-tab-pane>
         </a-tabs>
     </div>
 </template>
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+const moment = require('moment')
 const columns = [
     {  
         title: '订单号',
@@ -102,6 +140,10 @@ const columns = [
         scopedSlots: { customRender: 'roomType' }
     },
     {
+        title: '房间数量',
+        dataIndex: 'roomNum',
+    },
+    {
         title: '入住时间',
         dataIndex: 'checkInDate',
         scopedSlots: { customRender: 'checkInDate' }
@@ -112,7 +154,7 @@ const columns = [
         scopedSlots: { customRender: 'checkOutDate' }
     },
     {
-        title: '入住人数',
+        title: '预计入住人数',
         dataIndex: 'peopleNum',
     },
     {
@@ -137,6 +179,8 @@ export default {
     name: 'info',
     data(){
         return {
+            checkPassword: false,
+            confirmDirty: false,
             modify: false,
             formLayout: 'horizontal',
             pagination: {},
@@ -165,17 +209,53 @@ export default {
             'updateUserInfo',
             'cancelOrder'
         ]),
+        moment,
+        handleChange(e) {
+            this.checkPassword = e.target.checked;
+            this.$nextTick(() => {
+                this.form.validateFields(['password'], { force: true });
+            });
+        },
+        handleConfirmBlur(e) {
+            const value = e.target.value;
+            this.confirmDirty = this.confirmDirty || !!value;
+        },
+        compareToFirstPassword(rule, value, callback) {
+            const form = this.form;
+            if (value && value !== form.getFieldValue('password')) {
+                callback('两次密码不一致');
+            } else {
+                callback();
+            }
+        },
+        validateToNextPassword(rule, value, callback) {
+            const form = this.form;
+            if (value && this.confirmDirty) {
+                form.validateFields(['confirm'], { force: true });
+            }
+            callback();
+        },
         saveModify() {
             this.form.validateFields((err, values) => {
                 if (!err) {
-                    const data = {
-                        userName: this.form.getFieldValue('userName'),
-                        phoneNumber: this.form.getFieldValue('phoneNumber'),
-                        password: this.form.getFieldValue('password')
+                    if(this.checkPassword){
+                        const data = {
+                            userName: this.form.getFieldValue('userName'),
+                            phoneNumber: this.form.getFieldValue('phoneNumber'),
+                            password: this.form.getFieldValue('password')
+                        }
+                        this.updateUserInfo(data).then( ()=>{
+                            this.modify = false
+                        })
+                    }else{
+                        const data = {
+                            userName: this.form.getFieldValue('userName'),
+                            phoneNumber: this.form.getFieldValue('phoneNumber'),
+                        }
+                        this.updateUserInfo(data).then( ()=>{
+                            this.modify = false
+                        })
                     }
-                    this.updateUserInfo(data).then(()=>{
-                        this.modify = false
-                    })
                 }
             });
         },
@@ -184,6 +264,7 @@ export default {
                 this.form.setFieldsValue({
                     'userName': this.userInfo.userName,
                     'phoneNumber': this.userInfo.phoneNumber,
+                    'birthday': this.userInfo.birthday
                 })
             }, 0)
             this.modify = true
@@ -200,6 +281,7 @@ export default {
         
     }
 }
+
 </script>
 <style scoped lang="less">
     .info-wrapper {

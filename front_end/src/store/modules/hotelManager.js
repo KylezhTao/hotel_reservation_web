@@ -8,6 +8,8 @@ import {
 import {
     hotelAllCouponsAPI,
     hotelTargetMoneyAPI,
+    hotelTimeAPI,
+    hotelTargetRoomAPI,
 } from '@/api/coupon'
 import { message } from 'ant-design-vue'
 
@@ -70,7 +72,7 @@ const hotelManager = {
             state.couponList = data
         },
         set_addCouponVisible: function(state, data) {
-            state.addCouponVisible =data
+            state.addCouponVisible = data
         }
     },
     actions: {
@@ -120,16 +122,45 @@ const hotelManager = {
             const res = await hotelAllCouponsAPI(state.activeHotelId)
             if(res) {
                 // 获取到酒店策略之后的操作（将获取到的数组赋值给couponList）
+                commit('set_couponList', res)
             }
         },
-        addHotelCoupon: async({ commit, dispatch }, data) => {
+        addHotelTargetMoneyCoupon: async({ commit, dispatch }, data) => {
             const res = await hotelTargetMoneyAPI(data)
             if(res){
                 // 添加成功后的操作（提示文案、modal框显示与关闭，调用优惠列表策略等）
+                dispatch('getHotelCoupon')
+                commit('set_addCouponVisible', false)
+                commit('set_couponVisible', true)
+                message.success('添加成功')
             }else{
                 // 添加失败后的操作
+                message.error('添加失败')
             }
-        }
+        },
+        addHotelTimeCoupon: async({ commit, dispatch }, data) => {
+            const res = await hotelTimeAPI(data)
+            if(res){
+                dispatch('getHotelCoupon')
+                commit('set_addCouponVisible', false)
+                commit('set_couponVisible', true)
+                message.success('添加成功')
+            }else{
+                message.error('添加失败')
+            }
+        },
+        addHotelTargetRoomCoupon: async({ commit, dispatch }, data) => {
+            const res = await hotelTargetRoomAPI(data)
+            if(res){
+                dispatch('getHotelCoupon')
+                commit('set_addCouponVisible', false)
+                commit('set_couponVisible', true)
+                message.success('添加成功')
+            }else{
+                message.error('添加失败')
+            }
+        },
     }
 }
+
 export default hotelManager

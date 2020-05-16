@@ -2,16 +2,15 @@ package com.example.hotel.vo;
 
 import com.example.hotel.enums.UserType;
 
-/**
- * @author fjj
- * @date 2019/4/11 3:22 PM
- */
+import java.time.LocalDate;
+
 public class UserVO {
     private Integer id;
     private String email;
     private String password;
     private String userName;
     private String phoneNumber;
+    private LocalDate birthday;
     private double credit;
     private UserType userType;
 
@@ -69,5 +68,13 @@ public class UserVO {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 }

@@ -94,6 +94,14 @@
               <a-icon slot="prefix" type="book" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
+          <a-form-item >
+            <a-date-picker
+                    size="large"
+                    format="YYYY-MM-DD"
+                    placeholder="生日"
+                    v-decorator="['birthday', { rules: [{ required: true, message: '请输入生日'}], validateTrigger: 'blur'}]"
+            />
+          </a-form-item>
           <a-form-item>
             <a-input
               size="large"
@@ -112,7 +120,7 @@
               placeholder="确认密码"
               v-decorator="[
                 'registerPasswordconfirm', 
-                {rules: [{ required: true, message: '请输入密码' }, { validator: this.handlePasswordCheck }], validateTrigger: 'blur'}]">
+                {rules: [{ required: true, message: '请确认输入密码' }, { validator: this.handlePasswordCheck }], validateTrigger: 'blur'}]">
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -134,7 +142,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
-
+const moment = require('moment')
 export default {
   name: 'login',
   components: {
@@ -235,9 +243,10 @@ export default {
             email: this.form.getFieldValue('registerUserMail'),
             password: this.form.getFieldValue('registerPassword'),
             phoneNumber: this.form.getFieldValue('registerPhoneNumber'),
-            username: this.form.getFieldValue('registerUsername'),
+            userName: this.form.getFieldValue('registerUsername'),
+            birthday: moment(this.form.getFieldValue('birthday')),
             credit: 100,
-            userType: 1
+            userType: 0,
           }
           await this.register(data).then(() => {
             this.customActiveKey = 'tab1'

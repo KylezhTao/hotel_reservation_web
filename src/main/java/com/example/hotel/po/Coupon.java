@@ -28,6 +28,7 @@ public class Coupon {
     /**
      * 优惠券使用门槛
      */
+    private Integer targetRoom;
     private double targetMoney;
 
     /**
@@ -140,6 +141,11 @@ public class Coupon {
         this.discount = discount;
     }
 
-    public Coupon() {
+    public Integer getTargetRoom() {
+        return targetRoom;
+    }
+
+    public void setTargetRoom(Integer targetRoom) {
+        this.targetRoom = targetRoom;
     }
 }

@@ -29,7 +29,7 @@
             </a-form-item>
             
             <a-form-item v-bind="formItemLayout" label="入住日期">
-                <a-range-picker
+                <a-range-picker :disabled-date="disabledDate"
                     format="YYYY-MM-DD"
                     @change="changeDate"
                     v-decorator="[
@@ -85,13 +85,19 @@
                     @change="changeRoomNum"
                 >
                     <a-select-option :value="1">
-                    1
+                        1
                     </a-select-option>
                     <a-select-option :value="2">
-                    2
+                        2
                     </a-select-option>
                      <a-select-option :value="3">
-                    3
+                        3
+                    </a-select-option>
+                    <a-select-option :value="4">
+                        4
+                    </a-select-option>
+                    <a-select-option :value="5">
+                        5
                     </a-select-option>
                 </a-select>
             </a-form-item>
@@ -102,12 +108,12 @@
                 <span>￥{{ totalPrice }}</span>
             </a-form-item>
             <a-divider></a-divider>
-            <h2 v-if="orderMatchCouponList.length>0">优惠</h2>
+            <h2 v-if="orderMatchCouponList.length>0">可用优惠券</h2>
             <a-checkbox-group v-model="checkedList" @change="onchange">
                 <a-table
                     :columns="columns"
                     :dataSource="orderMatchCouponList"
-                    :showHeader="false"
+                    :showHeader="true"
                     bordered
                     v-if="orderMatchCouponList.length>0"
                 >
@@ -117,6 +123,7 @@
                         :value="record"
                     >
                     </a-checkbox>
+                    <a-tag color="red" slot="couponName" slot-scope="text">{{text}}</a-tag>
                 </a-table>
             </a-checkbox-group>
              <a-form-item v-bind="formItemLayout" label="结算后总价">
@@ -202,8 +209,12 @@ export default {
         confirmOrder() {
 
         },
+        disabledDate(current) {
+            // Can not select days before today and today
+            return current && current < moment().endOf('day');
+        },
         changeDate(v) {
-            if(this.totalPrice != ''){
+            if(this.totalPrice !== ''){
                 this.totalPrice = this.form.getFieldValue('roomNum') * moment(v[1]).diff(moment(v[0]), 'day') * Number(this.currentOrderRoom.price)
             }
         },
@@ -216,7 +227,12 @@ export default {
         onchange() {
             this.finalPrice = this.totalPrice
             if(this.checkedList.length>0){
-                this.orderMatchCouponList.filter(item => this.checkedList.indexOf(item.id)!=-1).forEach(item => this.finalPrice= this.finalPrice-item.discountMoney)
+                // 先打折再减钱
+                this.orderMatchCouponList.filter(item => this.checkedList.indexOf(item.id)!==-1).forEach(item => {
+                    if(item.discount !== 0)
+                        this.finalPrice = this.finalPrice * (1 + item.discount)
+                    this.finalPrice = this.finalPrice - item.discountMoney
+                })
             }else{
                 
             }
@@ -231,7 +247,7 @@ export default {
                         userId: Number(this.userId),
                         checkInDate: moment(this.form.getFieldValue('date')[0]).format('YYYY-MM-DD'),
                         checkOutDate: moment(this.form.getFieldValue('date')[1]).format('YYYY-MM-DD'),
-                        roomType: this.currentOrderRoom.roomType == '大床房' ? 'BigBed' : this.currentOrderRoom.roomType == '双床房' ? 'DoubleBed' : 'Family',
+                        roomType: this.currentOrderRoom.roomType === '大床房' ? 'BigBed' : this.currentOrderRoom.roomType === '双床房' ? 'DoubleBed' : 'Family',
                         roomNum: this.form.getFieldValue('roomNum'),
                         peopleNum: this.form.getFieldValue('peopleNum'),
                         haveChild: this.form.getFieldValue('haveChild'),

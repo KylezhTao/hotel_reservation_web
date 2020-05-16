@@ -1,5 +1,7 @@
 package com.example.hotel.vo;
 
+import java.time.LocalDate;
+
 /**
  * @Author: chenyizong
  * @Date: 2020-03-03
@@ -8,6 +10,7 @@ public class UserInfoVO {
     private String password;
     private String userName;
     private String phoneNumber;
+    private LocalDate birthday;
 
 
     public String getPassword() {
@@ -32,5 +35,13 @@ public class UserInfoVO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 }

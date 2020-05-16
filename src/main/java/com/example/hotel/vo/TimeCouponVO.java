@@ -7,9 +7,11 @@ public class TimeCouponVO extends CouponVO {
     private LocalDateTime endTime;
 
     //自行决定是打折还是直接减金额 如果选择打折就把targetMoney变为负数 否则就把discount变为负数
+    // 决定直接减金额
 
     private double discount;
-    private Integer targetMoney;
+    private Integer discountMoney;
+    private Integer hotelId;
 
     public LocalDateTime getEndTime() {
         return endTime;
@@ -35,11 +37,19 @@ public class TimeCouponVO extends CouponVO {
         this.discount = discount;
     }
 
-    public Integer getTargetMoney() {
-        return targetMoney;
+    public Integer getDiscountMoney() {
+        return discountMoney;
     }
 
-    public void setTargetMoney(Integer targetMoney) {
-        this.targetMoney = targetMoney;
+    public void setDiscountMoney(Integer discountMoney) {
+        this.discountMoney = discountMoney;
+    }
+
+    public Integer getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Integer hotelId) {
+        this.hotelId = hotelId;
     }
 }

@@ -71,9 +71,7 @@ const user = {
         },
         register: async({ commit }, data) => {
             const res = await registerAPI(data)
-            if(res){
-                message.success('注册成功')
-            }
+            message.success('注册成功')
         },
         getUserInfo({ state, commit }) {
             return new Promise((resolve, reject) => {
@@ -97,8 +95,8 @@ const user = {
             }
             const res = await updateUserInfoAPI(params)
             if(res){
-                message.success('修改成功')
                 dispatch('getUserInfo')
+                message.success('修改成功')
             }
         },
         getUserOrders: async({ state, commit }) => {

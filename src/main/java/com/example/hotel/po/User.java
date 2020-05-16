@@ -3,12 +3,15 @@ package com.example.hotel.po;
 
 import com.example.hotel.enums.UserType;
 
+import java.time.LocalDate;
+
 public class User {
     private Integer id;
     private String email;
     private String password;
     private String userName;
     private String phoneNumber;
+    private LocalDate birthday;
     private double credit;
     private UserType userType;
 
@@ -66,5 +69,13 @@ public class User {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 }

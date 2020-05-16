@@ -23,6 +23,7 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
     private final static String RESERVE_ERROR = "预订失败";
+    private final static String ANNUL_ERROR = "取消订单失败";
     private final static String ROOMNUM_LACK = "预订房间数量剩余不足";
     @Autowired
     OrderMapper orderMapper;
@@ -71,7 +72,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseVO annulOrder(int orderid) {
         //取消订单逻辑的具体实现（注意可能有和别的业务类之间的交互）
-
+        try{
+            Order order = orderMapper.getOrderById(orderid);
+            int roomNum = -order.getRoomNum();
+            hotelService.updateRoomInfo(order.getHotelId(), order.getRoomType(), roomNum);
+            orderMapper.annulOrder(orderid);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseVO.buildFailure(ANNUL_ERROR);
+        }
         return ResponseVO.buildSuccess(true);
     }
 }

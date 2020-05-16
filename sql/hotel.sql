@@ -31,6 +31,7 @@ CREATE TABLE `Coupon` (
   `hotelId` int(11) DEFAULT '-1',
   `couponType` int(11) NOT NULL,
   `couponName` varchar(255) NOT NULL,
+  `target_room` int(11) DEFAULT NULL,
   `target_money` int(11) DEFAULT NULL,
   `discount` double DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
@@ -46,7 +47,8 @@ CREATE TABLE `Coupon` (
 --
 BEGIN;
 /*!40000 ALTER TABLE `Coupon` DISABLE KEYS */;
-INSERT INTO `Coupon` VALUES (2,'满500-100优惠',2,3,'满减优惠券',500,0,1,NULL,NULL,100);
+INSERT INTO `Coupon` VALUES (2,'满500-100优惠',2,3,'满减优惠1',NULL,500,0,1,NULL,NULL,100),(3,'立减40',-1,4,'网站限时优惠1',NULL,0,0,1,'2020-05-13 14:22:36','2020-05-30 14:22:36',40),
+                            (4,'3间以上85折',2,2,'多间优惠1',3,0,-0.15,1,NULL,NULL,0),(5,'满199减50',2,1,'生日特惠1',NULL,199,0,1,NULL,NULL,50);
 /*!40000 ALTER TABLE `Coupon` ENABLE KEYS */;
 COMMIT;
 
@@ -156,6 +158,7 @@ CREATE TABLE `User` (
   `password` varchar(11) NOT NULL,
   `username` varchar(255) DEFAULT NULL,
   `phonenumber` varchar(255) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
   `credit` double(255,0) DEFAULT NULL,
   `usertype` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -168,7 +171,7 @@ CREATE TABLE `User` (
 
 BEGIN;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (4,'1012681@qq.com','123456','测试一号','12345678919',100,'Client'),(5,'123@qq.com','123456','测试二号','12345678911',100,'Client'),(6,'333@qq.com','123456',NULL,NULL,NULL,'HotelManager');
+INSERT INTO `User` VALUES (4,'1012681@qq.com','123456','测试一号','12345678919','2000-05-16',100,'Client'),(5,'123@qq.com','123456','测试二号','12345678911','1999-05-16',100,'Client'),(6,'333@qq.com','123456',NULL,NULL,NULL,NULL,'HotelManager');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 COMMIT;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

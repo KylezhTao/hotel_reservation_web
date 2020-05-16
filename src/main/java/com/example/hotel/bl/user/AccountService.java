@@ -3,6 +3,8 @@ package com.example.hotel.bl.user;
 import com.example.hotel.po.User;
 import com.example.hotel.vo.*;
 
+import java.time.LocalDate;
+
 /**
  * @author huwen
  * @date 2019/3/23
@@ -38,7 +40,7 @@ public interface AccountService {
      * @param phonenumber
      * @return
      */
-    ResponseVO updateUserInfo(int id, String password,String username,String phonenumber);
+    ResponseVO updateUserInfo(int id, String password, String username, String phonenumber);
 
 
 }
