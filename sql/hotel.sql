@@ -28,7 +28,7 @@ DROP TABLE IF EXISTS `Coupon`;
 CREATE TABLE `Coupon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(255) DEFAULT NULL,
-  `hotelId` int(11) DEFAULT '-1',
+  `hotelId` int(11) DEFAULT NULL,
   `couponType` int(11) NOT NULL,
   `couponName` varchar(255) NOT NULL,
   `target_room` int(11) DEFAULT NULL,
@@ -66,6 +66,7 @@ CREATE TABLE `Hotel` (
   `address` varchar(255) DEFAULT NULL,
   `bizRegion` varchar(255) DEFAULT NULL,
   `hotelStar` varchar(255) DEFAULT NULL,
+  `hotelService` varchar(255) DEFAULT NULL,
   `phoneNum` int(11) DEFAULT NULL,
   `rate` double DEFAULT NULL,
   `manager_id` int(11) DEFAULT NULL,
@@ -79,7 +80,8 @@ CREATE TABLE `Hotel` (
 
 BEGIN;
 /*!40000 ALTER TABLE `Hotel` DISABLE KEYS */;
-INSERT INTO `Hotel` VALUES (1,'汉庭酒店','欢迎您入住',NULL,'XiDan','Four',1829373819,4.8,1),(2,'儒家酒店','欢迎您入住','南京市鼓楼区珠江路268号','XiDan','Four',1829373819,4.8,2),(3,'桂圆酒店','欢迎您入住','南京市栖霞区珠江路268号','XiDan','Four',1829553719,4.8,6);
+INSERT INTO `Hotel` VALUES (1,'汉庭酒店','欢迎您入住','南京市玄武区珠江路268号','XiDan','Four','Wi-Fi',1829373819,4.32,1),(2,'儒家酒店','欢迎您入住','南京市鼓楼区珠江路268号','XiDan','Four','热水',1829373819,4.8,2),(3,'桂圆酒店','欢迎您入住','南京市栖霞区珠江路268号','XiDan','Three','叫醒服务',1829553719,4.8,6),
+                           (4,'7天连锁酒店','欢迎您入住','南京市浦口区珠江路268号','Xidan','Five','Wi-Fi, 热水, 叫醒服务',1829373621,4.6,6);
 /*!40000 ALTER TABLE `Hotel` ENABLE KEYS */;
 COMMIT;
 
@@ -115,6 +117,9 @@ CREATE TABLE `OrderList` (
 --
 
 /*!40000 ALTER TABLE `OrderList` DISABLE KEYS */;
+INSERT INTO `OrderList` VALUES (14,5,3,'桂圆酒店','2020-05-19','2020-05-25','Family',4,2,1,'2020-05-18',7961,'测试二号','12345678911','已预订'),
+                               (15,5,3,'桂圆酒店','2020-05-20','2020-05-23','Family',1,1,1,'2020-05-18',436,'测试二号','12345678911','已撤销'),
+                               (16,5,2,'儒家酒店','2020-05-21','2020-05-25','Family',2,1,0,'2020-05-18',1623,'测试二号','12345678911','已入住');
 /*!40000 ALTER TABLE `OrderList` ENABLE KEYS */;
 
 --
@@ -141,7 +146,7 @@ CREATE TABLE `Room` (
 
 BEGIN;
 /*!40000 ALTER TABLE `Room` DISABLE KEYS */;
-INSERT INTO `Room` VALUES (2,199,20,20,1,'BigBed'),(3,299,30,30,1,'DoubleBed'),(4,399,10,10,1,'Family'),(5,122,7,0,1,'BigBed'),(6,399,10,10,2,'Family');
+INSERT INTO `Room` VALUES (2,199,20,20,1,'BigBed'),(3,299,30,30,1,'DoubleBed'),(4,399,10,10,1,'Family'),(6,399,3,10,2,'Family');
 /*!40000 ALTER TABLE `Room` ENABLE KEYS */;
 COMMIT;
 
@@ -171,7 +176,8 @@ CREATE TABLE `User` (
 
 BEGIN;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (4,'1012681@qq.com','123456','测试一号','12345678919','2000-05-16',100,'Client'),(5,'123@qq.com','123456','测试二号','12345678911','1999-05-16',100,'Client'),(6,'333@qq.com','123456',NULL,NULL,NULL,NULL,'HotelManager');
+INSERT INTO `User` VALUES (4,'1012681@qq.com','123456','测试一号','12345678919','2000-05-16',100,'Client'),(5,'123@qq.com','123456','测试二号','12345678911','1999-05-16',100,'Client'),(6,'333@qq.com','123456','酒店工作人员1',NULL,NULL,NULL,'HotelManager'),
+                          (7,'111@qq.com','123456','网站管理员admin',NULL,NULL,NULL,'Admin'),(8,'222@qq.com','123456','网站营销人员1',NULL,NULL,NULL,'Marketer');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 COMMIT;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

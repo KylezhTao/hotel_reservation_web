@@ -34,7 +34,13 @@ public class HotelController {
     @PostMapping("/roomInfo")
     public ResponseVO addRoomInfo(@RequestBody HotelRoom hotelRoom) {
         roomService.insertRoomInfo(hotelRoom);
-        return ResponseVO.buildSuccess();
+        return ResponseVO.buildSuccess(true);
+    }
+
+    @PostMapping("/{hotelId}/update")
+    public ResponseVO updateHotelInfo(@RequestBody HotelVO hotelVO, @PathVariable Integer hotelId) {
+        return hotelService.updateHotelInfo(hotelId, hotelVO.getAddress(),
+                hotelVO.getBizRegion(), hotelVO.getHotelStar(), hotelVO.getHotelService(), hotelVO.getDescription());
     }
 
     @GetMapping("/{hotelId}/detail")

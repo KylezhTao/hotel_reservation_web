@@ -15,6 +15,12 @@ export function getAllOrdersAPI() {
         method: 'GET',
     })
 }
+export function getManagerOrdersAPI(data) {
+    return axios({
+        url: `${api.orderPre}/${data.userId}/getMyOrders`,
+        method: 'GET',
+    })
+}
 export function getUserOrdersAPI(data) {
     return axios({
         url: `${api.orderPre}/${data.userId}/getUserOrders`,

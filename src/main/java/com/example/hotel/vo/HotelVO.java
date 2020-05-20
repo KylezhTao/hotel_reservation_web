@@ -1,10 +1,5 @@
 package com.example.hotel.vo;
 
-import com.example.hotel.enums.BizRegion;
-import com.example.hotel.enums.HotelStar;
-import com.example.hotel.po.HotelRoom;
-import com.example.hotel.po.User;
-
 import java.util.List;
 
 public class HotelVO {
@@ -17,8 +12,10 @@ public class HotelVO {
     private String description;
     private String phoneNum;
     private Integer managerId;
+    private String hotelService;
 
     private List<RoomVO> rooms;
+    private String roomTypes;
 
     public Integer getId() {
         return id;
@@ -98,5 +95,27 @@ public class HotelVO {
 
     public void setManagerId(Integer managerId) {
         this.managerId = managerId;
+    }
+
+    public String getHotelService() {
+        return hotelService;
+    }
+
+    public void setHotelService(String hotelService) {
+        this.hotelService = hotelService;
+    }
+
+    public String getRoomTypes() {
+        return roomTypes;
+    }
+
+    public void setRoomTypes() {
+        StringBuffer res = new StringBuffer();
+        for(int i=0; i<rooms.size(); i++){
+            res.append(rooms.get(i).getRoomType());
+            if(i != rooms.size()-1)
+                res.append("， ");
+        }
+        roomTypes = res.toString();
     }
 }

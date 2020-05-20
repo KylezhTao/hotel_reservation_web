@@ -6,10 +6,7 @@ import com.example.hotel.vo.ResponseVO;
 
 import java.util.List;
 
-/**
- * @Author: chenyizong
- * @Date: 2020-03-04
- */
+
 public interface OrderService {
 
     /**
@@ -31,6 +28,8 @@ public interface OrderService {
      * @return
      */
     List<Order> getUserOrders(int userid);
+
+    List<Order> getManagerOrders(int userid);
 
     /**
      * 撤销订单

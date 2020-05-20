@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @Author: chenyizong
- * @Date: 2020-03-04
- */
+
 @RestController()
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -22,13 +19,22 @@ public class AdminController {
 
     @PostMapping("/addManager")
     public ResponseVO addManager(@RequestBody UserForm userForm){
-
         return adminService.addManager(userForm);
+    }
+
+    @PostMapping("/addMarketer")
+    public ResponseVO addMarketer(@RequestBody UserForm userForm){
+        return adminService.addMarketer(userForm);
     }
 
     @PostMapping("/getAllManagers")
     public ResponseVO getAllManagers(){
         return ResponseVO.buildSuccess(adminService.getAllManagers());
+    }
+
+    @PostMapping("/getAllUsers")
+    public ResponseVO getAllUsers(){
+        return ResponseVO.buildSuccess(adminService.getAllUsers());
     }
 
 

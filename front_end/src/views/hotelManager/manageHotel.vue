@@ -3,17 +3,46 @@
         <a-tabs>
             <a-tab-pane tab="酒店管理" key="1">
                 <div style="width: 100%; text-align: right; margin:20px 0">
-                    <a-button type="primary" @click="addHotel"><a-icon type="plus" />添加酒店</a-button>
+                    <a-button v-if="userInfo.userType==='HotelManager'"
+                              @click="myHotelFilter"><a-icon type="filter"/>我管理的酒店</a-button>
+                    <a-divider type="vertical"></a-divider>
+                    <a-button v-if="userInfo.userType==='HotelManager'"
+                              @click="reset"><a-icon type="redo"/>所有酒店</a-button>
+                    <a-divider type="vertical"></a-divider>
+                    <a-button v-if="userInfo.userType==='HotelManager'" type="primary"
+                              @click="addHotel"><a-icon type="plus" />添加酒店</a-button>
                 </div>
                  <a-table
                     :columns="columns1"
-                    :dataSource="hotelList"
+                    :dataSource="isFilter?res:hotelList"
                     bordered
                 >
+                     <a-tag :color="text==='Five'?'orange':text==='Four'?'blue':'green'"
+                            slot="hotelStar" slot-scope="text">
+                         {{text}}
+                     </a-tag>
+                     <span slot="rate" slot-scope="text" >
+                        <a-statistic :value="text"
+                                     :precision="2"
+                        >
+                                    <template #suffix>
+                                        <span> / 5</span>
+                                    </template>
+                        </a-statistic>
+                    </span>
+
                     <span slot="action" slot-scope="record">
-                        <a-button type="primary" size="small" @click="addRoom(record)">录入房间</a-button>
+                        <a-button type="primary" size="small" icon="form"
+                                  :disabled="record.managerId !== Number(userId)"
+                                  @click="maintainInfo(record)">维护信息</a-button>
                         <a-divider type="vertical"></a-divider>
-                        <a-button type="info" size="small" @click="showCoupon(record)">优惠策略</a-button>
+                        <a-button type="primary" size="small" icon="plus"
+                                  :disabled="record.managerId !== Number(userId)"
+                                  @click="addRoom(record)">录入房间</a-button>
+                        <a-divider type="vertical"></a-divider>
+                        <a-button size="small" icon="bars"
+                                  :disabled="record.managerId !== Number(userId) && userInfo.userType!=='Marketer'"
+                                  @click="showCoupon(record)">优惠策略</a-button>
                         <a-divider type="vertical"></a-divider>
                         <a-popconfirm
                             title="确定想删除该酒店吗？"
@@ -21,41 +50,44 @@
                             okText="确定"
                             cancelText="取消"
                         >
-                            <a-button type="danger" size="small">删除酒店</a-button>
+                            <a-button type="danger" size="small" icon="delete"
+                                      :disabled="userInfo.userType!=='Admin'">
+                                删除酒店
+                            </a-button>
                         </a-popconfirm>
                     </span>
                 </a-table>
             </a-tab-pane>
-            <a-tab-pane tab="订单管理" key="2">
+            <a-tab-pane v-if="userInfo.userType!=='Admin'" tab="订单管理" key="2">
                 <a-table
                     :columns="columns2"
-                    :dataSource="orderList"
+                    :dataSource="userInfo.userType==='Marketer'?orderList:managerOrderList"
                     bordered
                 >
                     <span slot="price" slot-scope="text">
                         <span>￥{{ text }}</span>
                     </span>
                     <span slot="roomType" slot-scope="text">
-                        <span v-if="text == 'BigBed'">大床房</span>
-                        <span v-if="text == 'DoubleBed'">双床房</span>
-                        <span v-if="text == 'Family'">家庭房</span>
+                        <span v-if="text === 'BigBed'">大床房</span>
+                        <span v-if="text === 'DoubleBed'">双床房</span>
+                        <span v-if="text === 'Family'">家庭房</span>
                     </span>
+                    <span slot="haveChild" slot-scope="text">
+                        <span v-if="text === true">有</span>
+                        <span v-if="text === false">无</span>
+                    </span>
+                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':'#f50'" slot-scope="text">
+                        {{ text }}
+                    </a-tag>
                     <span slot="action" slot-scope="record">
-                        <a-button type="primary" size="small">订单详情</a-button>
-                        <a-divider type="vertical"></a-divider>
-                        <a-popconfirm
-                            title="确定想删除该订单吗？"
-                            @confirm="deleteOrder(record)"
-                            okText="确定"
-                            cancelText="取消"
-                        >
-                            <a-button type="danger" size="small">删除订单</a-button>
-                        </a-popconfirm>
+                        <a-button type="primary" size="small" icon="tool"
+                                  v-if="record.hotelId"
+                                  @click="updateOrder">更新订单信息</a-button>
                     </span>
                 </a-table>
             </a-tab-pane>
-            
         </a-tabs>
+        <UpdateHotelInfoModal></UpdateHotelInfoModal>
         <AddHotelModal></AddHotelModal>
         <AddRoomModal></AddRoomModal>
         <Coupon></Coupon>
@@ -67,6 +99,7 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 import AddHotelModal from './components/addHotelModal'
 import AddRoomModal from './components/addRoomModal'
 import Coupon from './components/coupon'
+import UpdateHotelInfoModal from './components/updateHotelInfoModal'
 const moment = require('moment')
 const columns1 = [
     {  
@@ -83,11 +116,13 @@ const columns1 = [
     },
     {
         title: '酒店星级',
-        dataIndex: 'hotelStar'
+        dataIndex: 'hotelStar',
+        scopedSlots:{customRender: 'hotelStar'},
     },
     {
         title: '评分',
         dataIndex: 'rate',
+        scopedSlots:{customRender: 'rate'},
     },
     {
         title: '简介',
@@ -114,6 +149,10 @@ const columns2 = [
         scopedSlots: { customRender: 'roomType' }
     },
     {
+        title: '房间数量',
+        dataIndex: 'roomNum',
+    },
+    {
         title: '入住时间',
         dataIndex: 'checkInDate',
         scopedSlots: { customRender: 'checkInDate' }
@@ -124,12 +163,24 @@ const columns2 = [
         scopedSlots: { customRender: 'checkOutDate' }
     },
     {
-        title: '入住人数',
+        title: '预计入住人数',
         dataIndex: 'peopleNum',
+    },
+    {
+        title: '有无儿童',
+        dataIndex: 'haveChild',
+        scopedSlots: { customRender: 'haveChild' }
     },
     {
         title: '房价',
         dataIndex: 'price',
+    },
+    {
+        title: '状态',
+        filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已入住', value: '已入住' }],
+        onFilter: (value, record) => record.orderState.includes(value),
+        dataIndex: 'orderState',
+        scopedSlots: { customRender: 'orderState' }
     },
     {
       title: '操作',
@@ -142,6 +193,8 @@ export default {
     data(){
         return {
             formLayout: 'horizontal',
+            isFilter: false,
+            res: [],
             pagination: {},
             columns1,
             columns2,
@@ -151,32 +204,42 @@ export default {
     components: {
         AddHotelModal,
         AddRoomModal,
+        UpdateHotelInfoModal,
         Coupon,
     },
     computed: {
         ...mapGetters([
+            'userId',
+            'userInfo',
             'orderList',
+            'managerOrderList',
             'hotelList',
             'addHotelModalVisible',
             'addRoomModalVisible',
+            'updateHotelInfoModalVisible',
             'activeHotelId',
             'couponVisible',
         ]),
     },
     async mounted() {
+        await this.getUserInfo()
         await this.getHotelList()
         await this.getAllOrders()
+        await this.getManagerOrders()
     },
     methods: {
         ...mapMutations([
+            'set_updateHotelInfoModalVisible',
             'set_addHotelModalVisible',
             'set_addRoomModalVisible',
             'set_couponVisible',
             'set_activeHotelId',
         ]),
         ...mapActions([
+            'getUserInfo',
             'getHotelList',
             'getAllOrders',
+            'getManagerOrders',
             'getHotelCoupon'
         ]),
         addHotel() {
@@ -186,15 +249,26 @@ export default {
             this.set_activeHotelId(record.id)
             this.set_addRoomModalVisible(true)
         },
+        maintainInfo(record){
+            this.set_activeHotelId(record.id)
+            this.set_updateHotelInfoModalVisible(true)
+        },
         showCoupon(record) {
             this.set_activeHotelId(record.id)
             this.set_couponVisible(true)
             this.getHotelCoupon()
         },
-        deleteHotel(){
+        myHotelFilter(){
+            this.res = this.hotelList.filter(item => item.managerId === Number(this.userId))
+            this.isFilter = true
+        },
+        reset(){
+            this.isFilter = false
+        },
+        deleteHotel(record){
 
         },
-        deleteOrder(){
+        updateOrder(){
 
         },
     }

@@ -48,7 +48,6 @@ export default {
     computed: {
         ...mapGetters([
             'addManagerModalVisible',
-            'managerList',
         ])
     },
     beforeCreate() {
@@ -63,7 +62,6 @@ export default {
             'set_addManagerParams',
         ]),
         ...mapActions([
-            'getManagerList',
             'addManager',
         ]),
         cancel() {

@@ -98,6 +98,7 @@ export default {
     },
     computed: {
         ...mapGetters([
+            'userInfo',
             'activeHotelId',
             'addCouponVisible',
         ])
@@ -140,7 +141,7 @@ export default {
                             type: Number(this.form.getFieldValue('couponType')),
                             targetMoney: Number(this.form.getFieldValue('targetMoney')),
                             discountMoney: Number(this.form.getFieldValue('discountMoney')),
-                            hotelId: Number(this.activeHotelId),
+                            hotelId: this.userInfo.userType === 'Marketer'?-1:Number(this.activeHotelId),
                             status: 1
                         }
                         this.addHotelTargetMoneyCoupon(data)
@@ -152,7 +153,7 @@ export default {
                             type: Number(this.form.getFieldValue('couponType')),
                             startTime: moment(this.form.getFieldValue('date')[0]),
                             endTime: moment(this.form.getFieldValue('date')[1]),
-                            hotelId: Number(this.activeHotelId),
+                            hotelId: this.userInfo.userType === 'Marketer'?-1:Number(this.activeHotelId),
                             discountMoney: Number(this.form.getFieldValue('discountMoney')),
                             status: 1
                         }
@@ -165,12 +166,10 @@ export default {
                             type: Number(this.form.getFieldValue('couponType')),
                             targetRoom: Number(this.form.getFieldValue('targetRoom')),
                             discount: Number(this.form.getFieldValue('discount')),
-                            hotelId: Number(this.activeHotelId),
+                            hotelId: this.userInfo.userType === 'Marketer'?-1:Number(this.activeHotelId),
                             status: 1
                         }
                         this.addHotelTargetRoomCoupon(data)
-                    }else{
-
                     }
                 }
             });

@@ -20,19 +20,27 @@
                             <span class="value">{{ currentHotelInfo.name }}</span>
                         </div>
                         <div class="items" v-if="currentHotelInfo.address">
-                            <span class="label">地址</span>
+                            <span class="label">地址：</span>
                             <span class="value">{{ currentHotelInfo.address }}</span>
                         </div>
                         <div class="items" v-if="currentHotelInfo.rate">
-                            <span class="label">评分:</span> 
+                            <span class="label">评分：</span>
                             <span class="value">{{ currentHotelInfo.rate }}</span>
                         </div>
                         <div class="items" v-if="currentHotelInfo.hotelStar">
-                            <span class="label">星级:</span> 
+                            <span class="label">星级：</span>
                             <a-rate style="font-size: 15px" :value="currentHotelInfo.rate" disabled allowHalf/>
                         </div>
+                        <div class="items" v-if="currentHotelInfo.hotelService">
+                            <span class="label">设施服务：</span>
+                            <span class="value">
+                                <a-tag color="geekblue">
+                                    {{ currentHotelInfo.hotelService }}
+                                </a-tag>
+                            </span>
+                        </div>
                         <div class="items" v-if="currentHotelInfo.description">
-                            <span class="label">酒店简介:</span> 
+                            <span class="label">酒店简介：</span>
                             <span class="value">{{ currentHotelInfo.description }}</span>
                         </div>
                     </div>
@@ -45,6 +53,46 @@
                     <a-tab-pane tab="酒店详情" key="2">
 
                     </a-tab-pane>
+                    <a-tab-pane tab="评论" key="3">
+                        <div>
+                            <a-list
+                                    v-if="comments.length"
+                                    :data-source="comments"
+                                    :header="`${comments.length} 条评论`"
+                                    item-layout="horizontal"
+                            >
+                                <a-list-item slot="renderItem" slot-scope="item">
+                                    <a-comment
+                                            :author="item.author"
+                                            :avatar="item.avatar"
+                                            :content="item.content"
+                                            :datetime="item.datetime"
+                                    />
+                                </a-list-item>
+                            </a-list>
+                            <a-comment>
+                                <a-avatar
+                                        slot="avatar"
+                                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                />
+                                <div slot="content">
+                                    <a-form-item>
+                                        <a-textarea :rows="4" :value="value" @change="handleChange" />
+                                    </a-form-item>
+                                    <a-form-item>
+                                        <a-button html-type="submit"
+                                                  :loading="submitting"
+                                                  type="primary"
+                                                  icon='edit'
+                                                  @click="handleSubmit"
+                                        >
+                                            评论
+                                        </a-button>
+                                    </a-form-item>
+                                </div>
+                            </a-comment>
+                        </div>
+                    </a-tab-pane>
                 </a-tabs>
             </div>
         </a-layout-content>
@@ -52,6 +100,7 @@
 </template>
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+import moment from 'moment';
 import RoomList from './components/roomList'
 export default {
     name: 'hotelDetail',
@@ -60,17 +109,22 @@ export default {
     },
     data() {
         return {
-
+            comments: [],
+            submitting: false,
+            value: '',
+            moment,
         }
     },
     computed: {
         ...mapGetters([
             'currentHotelInfo',
+            'userInfo',
         ])
     },
     mounted() {
         this.set_currentHotelId(Number(this.$route.params.hotelId))
         this.getHotelById()
+        this.getUserInfo()
     },
     beforeRouteUpdate(to, from, next) {
         this.set_currentHotelId(Number(to.params.hotelId))
@@ -82,9 +136,34 @@ export default {
             'set_currentHotelId',
         ]),
         ...mapActions([
-            'getHotelById'
-        ])
-    }
+            'getHotelById',
+            'getUserInfo'
+        ]),
+        handleSubmit() {
+            if (!this.value) {
+                return;
+            }
+
+            this.submitting = true;
+
+            setTimeout(() => {
+                this.submitting = false;
+                this.comments = [
+                    {
+                        author: this.userInfo.userName,
+                        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                        content: this.value,
+                        datetime: moment().fromNow(),
+                    },
+                    ...this.comments,
+                ];
+                this.value = '';
+            }, 1000);
+        },
+        handleChange(e) {
+            this.value = e.target.value;
+        },
+    },
 }
 </script>
 <style scoped lang="less">
@@ -109,7 +188,8 @@ export default {
                     font-size: 18px;
                 }
                 .value {
-                    margin-right: 15px
+                    margin-right: 15px;
+                    font-size: 15px;
                 }
             }
         }

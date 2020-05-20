@@ -1,6 +1,7 @@
 package com.example.hotel.po;
 
 import com.example.hotel.enums.BizRegion;
+import com.example.hotel.enums.HotelService;
 import com.example.hotel.enums.HotelStar;
 
 public class Hotel {
@@ -15,6 +16,7 @@ public class Hotel {
     private Double rate;
     private String description;
     private String phoneNum;
+    private HotelService hotelService;
     /**
      * 酒店管理员id
      */
@@ -90,6 +92,14 @@ public class Hotel {
 
     public void setManagerId(Integer managerId) {
         this.managerId = managerId;
+    }
+
+    public HotelService getService() {
+        return hotelService;
+    }
+
+    public void setService(HotelService service) {
+        this.hotelService = service;
     }
 }
 

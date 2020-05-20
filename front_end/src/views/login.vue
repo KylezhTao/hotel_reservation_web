@@ -70,7 +70,7 @@
               placeholder="邮箱"
               v-decorator="[
               'registerUserMail', 
-              {rules: [{ required: true, type: 'email', message: '请输入邮箱' }], validateTrigger: 'blur'}]">
+              {rules: [{ required: true, type: 'email', message: '请输入有效邮箱' }, { validator: this.checkEmail }], validateTrigger: 'blur'}]">
               <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -103,26 +103,24 @@
             />
           </a-form-item>
           <a-form-item>
-            <a-input
+            <a-input-password allow-clear
               size="large"
-              type="password"
               placeholder="密码"
               v-decorator="[
                 'registerPassword', 
                 {rules: [{ required: true, message: '请输入密码' }, { validator: this.handlePassword }], validateTrigger: 'blur'}]">
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-            </a-input>
+            </a-input-password>
           </a-form-item>
           <a-form-item>
-            <a-input
+            <a-input-password allow-clear
               size="large"
-              type="password"
               placeholder="确认密码"
               v-decorator="[
-                'registerPasswordconfirm', 
+                'registerPasswordconfirm',
                 {rules: [{ required: true, message: '请确认输入密码' }, { validator: this.handlePasswordCheck }], validateTrigger: 'blur'}]">
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-            </a-input>
+            </a-input-password>
           </a-form-item>
            <a-form-item style="margin-top:24px">
             <a-button
@@ -194,7 +192,7 @@ export default {
         if (re.test(value)) {
             callback();
         } else {
-            callback(new Error('请输入有效邮箱'));
+            callback(new Error('当前邮箱格式不正确'));
         }
         callback()
     },

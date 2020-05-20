@@ -5,6 +5,7 @@ import com.example.hotel.po.Order;
 import com.example.hotel.util.ServiceException;
 import com.example.hotel.vo.CouponVO;
 import com.example.hotel.vo.HotelVO;
+import com.example.hotel.vo.ResponseVO;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ public interface HotelService {
      * @throws
      */
     void addHotel(HotelVO hotelVO) throws ServiceException;
+
+
+    ResponseVO updateHotelInfo(Integer hotelId, String address, String bizRegion, String hotelStar, String hotelService, String description);
 
 
     /**

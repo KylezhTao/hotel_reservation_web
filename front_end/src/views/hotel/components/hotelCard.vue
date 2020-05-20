@@ -9,7 +9,10 @@
     <a-tooltip :title="hotel.title" placement="top">
       <a-card-meta :title="hotel.name">
       <template slot="description">
-        <a-rate style="font-size: 15px" :value="hotel.rate" disabled allowHalf/> {{hotel.rate}}分
+        <a-rate style="font-size: 15px" :value="hotel.rate" disabled allowHalf>
+          <a-icon slot="character" type="heart" />
+        </a-rate>
+        <span class="ant-rate-text">{{hotel.rate}}分</span>
       </template>
     </a-card-meta>
     </a-tooltip>

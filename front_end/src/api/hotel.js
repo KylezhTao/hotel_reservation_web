@@ -14,3 +14,14 @@ export function getHotelByIdAPI(param) {
         method: 'GET',
     })
 }
+
+
+// 把data改成param会出错，收不到请求主体（request payload）???
+// 感觉是触发了某种关键字
+export function updateHotelInfoAPI(data) {
+    return axios({
+        url: `${api.hotelPre}/${data.hotelId}/update`,
+        method: 'POST',
+        data,
+    })
+}

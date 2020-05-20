@@ -70,7 +70,6 @@ export default {
     computed: {
         ...mapGetters([
             'userId',
-            'addHotelParams',
             'addHotelModalVisible'
         ])
     },

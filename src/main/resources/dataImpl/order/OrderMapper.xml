@@ -3,10 +3,15 @@
 <mapper namespace="com.example.hotel.data.order.OrderMapper">
 
     <select id="getAllOrders" resultMap="Order">
-        select * from OrderList
+        select * from OrderList;
     </select>
     <select id="getUserOrders" resultMap="Order">
         select * from OrderList where userId=#{userid}
+    </select>
+    <select id="getManagerOrders" resultMap="Order">
+        select * from OrderList where orderlist.hotelId in
+                                      (select id from hotel where manager_id=#{userid}
+                                          )
     </select>
     <insert id="addOrder" parameterType="com.example.hotel.po.Order" useGeneratedKeys="true" keyProperty="id">
         insert into OrderList(userId,hotelId,hotelName,checkInDate,checkOutDate,roomType,roomNum,peopleNum,haveChild,createDate,price,clientName,phoneNumber,orderState)
@@ -15,7 +20,6 @@
     <select id="getOrderById" resultMap="Order">
         select * from OrderList where id=#{orderid}
     </select>
-   <!--取消订单的数据库操作-->
     <update id="annulOrder">
         update OrderList set orderState='已撤销' where id=#{orderid}
     </update>

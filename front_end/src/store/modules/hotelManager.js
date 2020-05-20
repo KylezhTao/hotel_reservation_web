@@ -11,6 +11,9 @@ import {
     hotelTimeAPI,
     hotelTargetRoomAPI,
 } from '@/api/coupon'
+import {
+    updateHotelInfoAPI,
+} from '@/api/hotel'
 import { message } from 'ant-design-vue'
 
 const hotelManager = {
@@ -21,6 +24,7 @@ const hotelManager = {
             address: '',
             bizRegion:'XiDan',
             hotelStar:'',
+            hotelService:'',
             rate: 0,
             description:'',
             phoneNum:'',
@@ -35,6 +39,7 @@ const hotelManager = {
             curNum: 0,
         },
         addRoomModalVisible: false,
+        updateHotelInfoModalVisible: false,
         couponVisible: false,
         addCouponVisible: false,
         activeHotelId: 0,
@@ -43,6 +48,9 @@ const hotelManager = {
     mutations: {
         set_orderList: function(state, data) {
             state.orderList = data
+        },
+        set_updateHotelInfoModalVisible: function(state, data) {
+            state.updateHotelInfoModalVisible = data
         },
         set_addHotelModalVisible: function(state, data) {
             state.addHotelModalVisible = data
@@ -82,6 +90,7 @@ const hotelManager = {
                 commit('set_orderList', res)
             }
         },
+
         addHotel: async({ state, dispatch, commit }) => {
             const res = await addHotelAPI(state.addHotelParams)
             if(res){
@@ -91,6 +100,7 @@ const hotelManager = {
                     address: '',
                     bizRegion:'XiDan',
                     hotelStar:'',
+                    hotelService:'',
                     rate: 0,
                     description:'',
                     phoneNum:'',
@@ -105,7 +115,6 @@ const hotelManager = {
         addRoom: async({ state, dispatch, commit }) => {
             const res = await addRoomAPI(state.addRoomParams)
             if(res){
-                commit('set_addRoomModalVisible', false)
                 commit('set_addRoomParams', {
                     roomType: '',
                     hotelId: '',
@@ -113,6 +122,7 @@ const hotelManager = {
                     total: 0,
                     curNum: 0,
                 })
+                commit('set_addRoomModalVisible', false)
                 message.success('添加成功')
             }else{
                 message.error('添加失败')
@@ -158,6 +168,18 @@ const hotelManager = {
                 message.success('添加成功')
             }else{
                 message.error('添加失败')
+            }
+        },
+        updateHotelInfo: async({ commit, state, dispatch }, data) => {
+            const params = {
+                hotelId: state.activeHotelId,
+                ...data,
+            }
+            const res = await updateHotelInfoAPI(params)
+            if(res){
+                dispatch('getHotelById')
+                commit('set_updateHotelInfoModalVisible',false)
+                message.success('更新成功')
             }
         },
     }

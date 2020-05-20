@@ -35,7 +35,7 @@ const routes = [
         component: () => import('@/views/user/info')
       },
       {
-        path: '/hotelManager/manageHotel',
+        path: '/manageHotel',
         name: 'manageHotel',
         component: () => import('@/views/hotelManager/manageHotel')
       },
@@ -43,6 +43,11 @@ const routes = [
         path: '/admin/manageUser',
         name: 'manageUser',
         component: () => import('@/views/admin/manageUser')
+      },
+      {
+        path: '/marketer/manageClient',
+        name: 'manageClient',
+        component: () => import('@/views/marketer/manageClient')
       },
     ]
   },

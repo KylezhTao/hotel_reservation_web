@@ -25,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final static String RESERVE_ERROR = "预订失败";
     private final static String ANNUL_ERROR = "取消订单失败";
     private final static String ROOMNUM_LACK = "预订房间数量剩余不足";
+    private final static String LOW_CREDIT = "您的信用值过低，无法生成订单";
     @Autowired
     OrderMapper orderMapper;
     @Autowired
@@ -34,6 +35,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseVO addOrder(OrderVO orderVO) {
+        User user = accountService.getUserInfo(orderVO.getUserId());
+        if(user.getCredit() < 0)
+            return ResponseVO.buildFailure(LOW_CREDIT);
         int reserveRoomNum = orderVO.getRoomNum();
         int curNum = hotelService.getRoomCurNum(orderVO.getHotelId(),orderVO.getRoomType());
         if(reserveRoomNum>curNum){
@@ -45,7 +49,6 @@ public class OrderServiceImpl implements OrderService {
             String curdate = sf.format(date);
             orderVO.setCreateDate(curdate);
             orderVO.setOrderState("已预订");
-            User user = accountService.getUserInfo(orderVO.getUserId());
             orderVO.setClientName(user.getUserName());
             orderVO.setPhoneNumber(user.getPhoneNumber());
             Order order = new Order();
@@ -67,6 +70,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getUserOrders(int userid) {
         return orderMapper.getUserOrders(userid);
+    }
+
+    @Override
+    public List<Order> getManagerOrders(int userid) {
+        return orderMapper.getManagerOrders(userid);
     }
 
     @Override

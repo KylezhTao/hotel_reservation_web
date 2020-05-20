@@ -5,8 +5,15 @@
         insert into User(email,password,usertype)
         values(#{email},#{password},#{userType})
     </insert>
+    <insert id="addMarketer" parameterType="com.example.hotel.po.User" useGeneratedKeys="true" keyProperty="id">
+        insert into User(email,password,usertype)
+        values(#{email},#{password},#{userType})
+    </insert>
     <select id="getAllManagers" resultMap="User">
         select * from User where usertype='HotelManager'
+    </select>
+    <select id="getAllUsers" resultMap="User">
+        select * from User where usertype!='Admin'
     </select>
 
 

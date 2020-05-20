@@ -42,7 +42,7 @@
                         </a-checkbox>
                     </a-form-item>
                     <a-form-item label="新密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="checkPassword && modify">
-                        <a-input
+                        <a-input-password allow-clear
                             placeholder="请输入新密码"
                             v-decorator="['password', {
                                 rules: [
@@ -53,7 +53,7 @@
                         />
                     </a-form-item>
                     <a-form-item label="确认新密码" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }" v-if="checkPassword && modify" has-feedback>
-                        <a-input
+                        <a-input-password allow-claer
                                 placeholder="请确认新密码"
                                 v-decorator="['confirm', {
                                     rules: [
@@ -95,12 +95,14 @@
                         <span v-if="text === 'DoubleBed'">双床房</span>
                         <span v-if="text === 'Family'">家庭房</span>
                     </span>
-                    <a-tag slot="orderState" color="blue" slot-scope="text">
+                    <span slot="haveChild" slot-scope="text">
+                        <span v-if="text === true">有</span>
+                        <span v-if="text === false">无</span>
+                    </span>
+                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':'#f50'" slot-scope="text">
                         {{ text }}
                     </a-tag>
                     <span slot="action" slot-scope="record">
-                        <a-button type="primary" size="small">查看</a-button>
-                        <a-divider type="vertical" v-if="record.orderState === '已预订'"></a-divider>
                         <a-popconfirm
                             title="你确定撤销该笔订单吗？"
                             @confirm="confirmCancelOrder(record.id)"
@@ -109,14 +111,19 @@
                             cancelText="取消"
                             v-if="record.orderState === '已预订'"
                         >
-                            <a-button type="danger" size="small">撤销</a-button>
+                            <a-button type="danger" icon="undo" size="small">撤销</a-button>
                         </a-popconfirm>
+                        <a-button type="primary" icon="edit" size="small"
+                                  @click="makeComment()"
+                                  v-if="record.orderState === '已入住'">
+                            评价
+                        </a-button>
                         
                     </span>
                 </a-table>
             </a-tab-pane>
 
-            <a-tab-pane tab="信用记录" key="3">
+            <a-tab-pane v-if='userInfo.userType==="Client"' tab="信用记录" key="3">
 
             </a-tab-pane>
         </a-tabs>
@@ -129,6 +136,10 @@ const columns = [
     {  
         title: '订单号',
         dataIndex: 'id',
+    },
+    {
+        title: '生成时间',
+        dataIndex: 'createDate',
     },
     {  
         title: '酒店名',
@@ -156,6 +167,11 @@ const columns = [
     {
         title: '预计入住人数',
         dataIndex: 'peopleNum',
+    },
+    {
+        title: '有无儿童',
+        dataIndex: 'haveChild',
+        scopedSlots: { customRender: 'haveChild' }
     },
     {
         title: '房价',

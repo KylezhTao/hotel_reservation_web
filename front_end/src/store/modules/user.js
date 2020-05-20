@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import router from '@/router'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
@@ -13,6 +12,7 @@ import {
 import {
     getUserOrdersAPI,
     cancelOrderAPI,
+    getManagerOrdersAPI,
 } from '@/api/order'
 
 const getDefaultState = () => {
@@ -22,6 +22,9 @@ const getDefaultState = () => {
 
         },
         userOrderList: [
+
+        ],
+        managerOrderList: [
 
         ]
     }
@@ -56,7 +59,10 @@ const user = {
         },
         set_userOrderList: (state, data) => {
             state.userOrderList = data
-        }
+        },
+        set_managerOrderList: function(state, data) {
+            state.managerOrderList = data
+        },
     },
 
     actions: {
@@ -106,7 +112,15 @@ const user = {
             const res = await getUserOrdersAPI(data)
             if(res){
                 commit('set_userOrderList', res)
-                console.log(state.userOrderList)
+            }
+        },
+        getManagerOrders: async({ state, commit }) => { // my -> manager
+            const data = {
+                userId: Number(state.userId)
+            }
+            const res = await getManagerOrdersAPI(data)
+            if(res){
+                commit('set_managerOrderList', res)
             }
         },
         cancelOrder: async({ state, dispatch }, orderId) => {

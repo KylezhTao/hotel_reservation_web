@@ -2,16 +2,11 @@ package com.example.hotel.vo;
 
 import java.time.LocalDate;
 
-/**
- * @Author: chenyizong
- * @Date: 2020-03-03
- */
 public class UserInfoVO {
     private String password;
     private String userName;
     private String phoneNumber;
     private LocalDate birthday;
-
 
     public String getPassword() {
         return password;

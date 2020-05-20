@@ -5,6 +5,7 @@ import com.example.hotel.enums.RoomType;
 public class RoomVO {
     private Integer id;
     private String roomType;
+    private String breakfast;
     private Double price;
     private Integer curNum;
     private Integer total;
@@ -47,5 +48,13 @@ public class RoomVO {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public String getBreakfast() {
+        return breakfast;
+    }
+
+    public void setBreakfast(String breakfast) {
+        this.breakfast = breakfast;
     }
 }
