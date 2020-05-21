@@ -14,6 +14,7 @@ public class User {
     private LocalDate birthday;
     private double credit;
     private UserType userType;
+    private String companyName;
 
     public Integer getId() {
         return id;
@@ -77,5 +78,13 @@ public class User {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

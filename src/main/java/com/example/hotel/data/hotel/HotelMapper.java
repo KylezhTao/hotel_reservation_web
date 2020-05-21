@@ -1,6 +1,7 @@
 package com.example.hotel.data.hotel;
 
 import com.example.hotel.po.Hotel;
+import com.example.hotel.vo.CommentVO;
 import com.example.hotel.vo.HotelVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,4 +21,6 @@ public interface HotelMapper {
 
     int updateHotel(@Param("id") int id, @Param("address") String address, @Param("bizRegion") String bizRegion,
                     @Param("hotelStar") String hotelStar, @Param("hotelService") String hotelService, @Param("description") String description);
+
+    List<CommentVO> selectAllHotelComments(@Param("hotelId") Integer hotelId);
 }

@@ -21,6 +21,9 @@
                             slot="hotelStar" slot-scope="text">
                          {{text}}
                      </a-tag>
+                     <a slot="hotelName" slot-scope="text">
+                         {{ text }}
+                     </a>
                      <span slot="rate" slot-scope="text" >
                         <a-statistic :value="text"
                                      :precision="2"
@@ -62,8 +65,18 @@
                 <a-table
                     :columns="columns2"
                     :dataSource="userInfo.userType==='Marketer'?orderList:managerOrderList"
+                    class="components-table-demo-nested"
                     bordered
                 >
+                    <span slot="expandedRowRender" slot-scope="record" style="margin: 0">
+                        <a-tag>- 生成时间： {{ record.createDate }}</a-tag>
+                        <a-divider type="vertical"></a-divider>
+                        <a-tag>- 入住日期： {{ record.checkInDate }}</a-tag>
+                        <a-divider type="vertical"></a-divider>
+                        <a-tag>- 退房日期： {{record.checkOutDate}}</a-tag>
+                        <a-divider type="vertical"></a-divider>
+                        <a-tag>- 订单最晚执行时间： {{record.latestExecTime}}</a-tag>
+                    </span>
                     <span slot="price" slot-scope="text">
                         <span>￥{{ text }}</span>
                     </span>
@@ -76,13 +89,14 @@
                         <span v-if="text === true">有</span>
                         <span v-if="text === false">无</span>
                     </span>
-                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':'#f50'" slot-scope="text">
+                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':text==='已撤销'?'#e8e819':'#ff0000'" slot-scope="text">
                         {{ text }}
                     </a-tag>
-                    <span slot="action" slot-scope="record">
+                    <span slot="action" slot-scope="record, text">
                         <a-button type="primary" size="small" icon="tool"
-                                  v-if="record.hotelId"
-                                  @click="updateOrder">更新订单信息</a-button>
+                                  v-if="(userInfo.userType==='HotelManager' && text==='已预订' || text==='异常') ||
+                                        (userInfo.userType==='Marketer' && text==='异常')"
+                                  @click="updateOrder(record)">更新订单信息</a-button>
                     </span>
                 </a-table>
             </a-tab-pane>
@@ -142,6 +156,7 @@ const columns2 = [
     {  
         title: '酒店名',
         dataIndex: 'hotelName',
+        scopedSlots: { customRender: 'hotelName' },
     },
     {
         title: '房型',
@@ -151,16 +166,6 @@ const columns2 = [
     {
         title: '房间数量',
         dataIndex: 'roomNum',
-    },
-    {
-        title: '入住时间',
-        dataIndex: 'checkInDate',
-        scopedSlots: { customRender: 'checkInDate' }
-    },
-    {
-        title: '离店时间',
-        dataIndex: 'checkOutDate',
-        scopedSlots: { customRender: 'checkOutDate' }
     },
     {
         title: '预计入住人数',
@@ -268,7 +273,7 @@ export default {
         deleteHotel(record){
 
         },
-        updateOrder(){
+        updateOrder(record){
 
         },
     }

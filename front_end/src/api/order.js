@@ -27,6 +27,12 @@ export function getUserOrdersAPI(data) {
         method: 'GET',
     })
 }
+export function getUserHotelOrdersAPI(data) {
+    return axios({
+        url: `${api.orderPre}/${data.userId}/${data.hotelId}/getUserHotelOrders`,
+        method: 'GET',
+    })
+}
 export function cancelOrderAPI(orderId) {
     return axios({
         url: `${api.orderPre}/${orderId}/annulOrder`,

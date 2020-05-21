@@ -7,14 +7,27 @@
                         :dataSource="clientList"
                         bordered
                 >
+                    <span slot="birthday" slot-scope="text">
+                        <a-date-picker
+                                :default-value="moment(text)"
+                                disabled
+                        />
+                    </span>
+                    <span slot="action" slot-scope="record">
+                        <a-button type="primary" size="small" icon="money-collect"
+                                  @click="rechargeCredit(record)">信用充值</a-button>
+                    </span>
                 </a-table>
             </a-tab-pane>
         </a-tabs>
+        <RechargeCreditModal></RechargeCreditModal>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+import RechargeCreditModal from './components/rechargeCreditModal'
+const moment = require('moment')
 const columns = [
     {
         title: '客户邮箱',
@@ -27,6 +40,7 @@ const columns = [
     {
         title: '生日',
         dataIndex: 'birthday',
+        scopedSlots: { customRender: 'birthday' },
     },
     {
         title: '信用值',
@@ -47,12 +61,14 @@ export default {
         }
     },
     components: {
-
+        RechargeCreditModal
     },
     computed: {
         ...mapGetters([
             'clientList',
-            'userInfo'
+            'userInfo',
+            'activeClientId',
+            'rechargeCreditModalVisible',
         ]),
     },
     async mounted() {
@@ -60,13 +76,19 @@ export default {
         await this.getUserInfo()
     },
     methods: {
+        ...mapMutations([
+            'set_rechargeCreditModalVisible',
+            'set_activeClientId',
+        ]),
         ...mapActions([
             'getClientList',
             'getUserInfo'
         ]),
-        ...mapMutations([
-
-        ]),
+        moment,
+        rechargeCredit(record){
+            this.set_activeClientId(record.id)
+            this.set_rechargeCreditModalVisible(true)
+        }
     }
 }
 </script>

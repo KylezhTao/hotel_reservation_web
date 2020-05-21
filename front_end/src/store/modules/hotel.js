@@ -2,7 +2,8 @@ import { message } from 'ant-design-vue'
 import store from '@/store'
 import {
     getHotelsAPI,
-    getHotelByIdAPI
+    getHotelByIdAPI,
+    getCommentsByHotelIdAPI
 } from '@/api/hotel'
 import {
     reserveHotelAPI
@@ -31,7 +32,10 @@ const hotel = {
         },
         orderMatchCouponList: [
 
-        ]
+        ],
+        commentsOfHotel: [
+
+        ],
     },
     mutations: {
         set_hotelList: function(state, data) {
@@ -66,6 +70,9 @@ const hotel = {
         },
         set_orderMatchCouponList: function(state, data) {
             state.orderMatchCouponList = data
+        },
+        set_commentsOfHotel: function (state, data) {
+            state.commentsOfHotel = data
         }
     },
 
@@ -97,6 +104,14 @@ const hotel = {
             const res = await orderMatchCouponsAPI(data)
             if(res){
                 commit('set_orderMatchCouponList', res)
+            }
+        },
+        getCommentsByHotelId: async({ state, commit }) => {
+            const res = await getCommentsByHotelIdAPI({
+                hotelId: state.currentHotelId
+            })
+            if(res){
+                commit('set_commentsOfHotel', res)
             }
         }
     }

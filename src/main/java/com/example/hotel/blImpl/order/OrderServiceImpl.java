@@ -44,13 +44,14 @@ public class OrderServiceImpl implements OrderService {
             return ResponseVO.buildFailure(ROOMNUM_LACK);
         }
         try {
-            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = new Date(System.currentTimeMillis());
             String curdate = sf.format(date);
             orderVO.setCreateDate(curdate);
             orderVO.setOrderState("已预订");
             orderVO.setClientName(user.getUserName());
             orderVO.setPhoneNumber(user.getPhoneNumber());
+            orderVO.setLatestExecTime(orderVO.getCheckInDate() + " 23:00:00");
             Order order = new Order();
             BeanUtils.copyProperties(orderVO,order);
             orderMapper.addOrder(order);
@@ -75,6 +76,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getManagerOrders(int userid) {
         return orderMapper.getManagerOrders(userid);
+    }
+
+    @Override
+    public List<Order> getUserHotelOrders(int userid, int hotelid) {
+        return orderMapper.getUserHotelOrders(userid, hotelid);
     }
 
     @Override

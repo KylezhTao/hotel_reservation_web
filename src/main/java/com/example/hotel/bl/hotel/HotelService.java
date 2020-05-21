@@ -3,6 +3,7 @@ package com.example.hotel.bl.hotel;
 import com.example.hotel.po.HotelRoom;
 import com.example.hotel.po.Order;
 import com.example.hotel.util.ServiceException;
+import com.example.hotel.vo.CommentVO;
 import com.example.hotel.vo.CouponVO;
 import com.example.hotel.vo.HotelVO;
 import com.example.hotel.vo.ResponseVO;
@@ -50,6 +51,8 @@ public interface HotelService {
      * @return
      */
     int getRoomCurNum(Integer hotelId,String roomType);
+
+    List<CommentVO> retrieveHotelComments(Integer hotelId);
 
 
 

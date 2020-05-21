@@ -4,6 +4,7 @@ const getters = {
   userId: state => state.user.userId,
   userInfo: state => state.user.userInfo,
   userOrderList: state => state.user.userOrderList,
+  userHotelOrderList: state => state.user.userHotelOrderList,
   managerOrderList: state => state.user.managerOrderList,
   hotelListLoading: state => state.hotel.hotelListLoading,
   hotelList: state => state.hotel.hotelList,
@@ -12,6 +13,7 @@ const getters = {
   orderModalVisible: state => state.hotel.orderModalVisible,
   currentOrderRoom: state => state.hotel.currentOrderRoom,
   orderMatchCouponList: state => state.hotel.orderMatchCouponList,
+  commentsOfHotel: state => state.hotel.commentsOfHotel,
   //admin
   userList: state => state.admin.userList,
   managerList: state => state.admin.managerList,
@@ -31,6 +33,9 @@ const getters = {
   couponList: state => state.hotelManager.couponList,
   //Marketer:
   clientList: state => state.marketer.clientList,
+  rechargeCreditModalVisible: state => state.marketer.rechargeCreditModalVisible,
+  activeClientId: state => state.marketer.activeClientId,
+
   }
   
   export default getters

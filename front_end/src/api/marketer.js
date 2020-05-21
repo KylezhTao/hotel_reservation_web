@@ -8,3 +8,10 @@ export function getClientListAPI(){
         method: 'POST'
     })
 }
+export function rechargeCreditAPI(data){
+    return axios({
+        url: `${api.marketerPre}/${data.id}/rechargeCredit`,
+        method: 'POST',
+        data
+    })
+}

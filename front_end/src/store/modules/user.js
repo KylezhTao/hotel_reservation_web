@@ -7,12 +7,14 @@ import {
     registerAPI,
     getUserInfoAPI,
     updateUserInfoAPI,
+    makeCommentAPI,
 } from '@/api/user'
 
 import {
     getUserOrdersAPI,
     cancelOrderAPI,
     getManagerOrdersAPI,
+    getUserHotelOrdersAPI
 } from '@/api/order'
 
 const getDefaultState = () => {
@@ -21,10 +23,14 @@ const getDefaultState = () => {
         userInfo: {
 
         },
+        activeUserId: 0,
         userOrderList: [
 
         ],
         managerOrderList: [
+
+        ],
+        userHotelOrderList: [
 
         ]
     }
@@ -57,11 +63,17 @@ const user = {
                 ...data
             }
         },
+        set_activeUserId: function(state, data) {
+            state.activeUserId = data
+        },
         set_userOrderList: (state, data) => {
             state.userOrderList = data
         },
         set_managerOrderList: function(state, data) {
             state.managerOrderList = data
+        },
+        set_userHotelOrderList: function(state, data) {
+            state.userHotelOrderList = data
         },
     },
 
@@ -105,6 +117,15 @@ const user = {
                 message.success('修改成功')
             }
         },
+        makeComment: async({ state, dispatch }, data) => {
+            const res = await makeCommentAPI(data)
+            if(res){
+                dispatch('getCommentsByHotelId')
+                message.success('评论成功')
+            }else{
+                message.error('评论失败')
+            }
+        },
         getUserOrders: async({ state, commit }) => {
             const data = {
                 userId: Number(state.userId)
@@ -121,6 +142,16 @@ const user = {
             const res = await getManagerOrdersAPI(data)
             if(res){
                 commit('set_managerOrderList', res)
+            }
+        },
+        getUserHotelOrders: async({ state, commit }, hotelId) => {
+            const params = {
+                userId: Number(state.userId),
+                hotelId: hotelId,
+            }
+            const res = await getUserHotelOrdersAPI(params)
+            if(res){
+                commit('set_userHotelOrderList', res)
             }
         },
         cancelOrder: async({ state, dispatch }, orderId) => {

@@ -13,6 +13,7 @@ public class OrderVO {
     private String hotelName;
     private String checkInDate;
     private String checkOutDate;
+    private String latestExecTime;
     private String roomType;
     private Integer roomNum;
     private Integer peopleNum;
@@ -141,5 +142,13 @@ public class OrderVO {
 
     public void setOrderState(String orderState) {
         this.orderState = orderState;
+    }
+
+    public String getLatestExecTime() {
+        return latestExecTime;
+    }
+
+    public void setLatestExecTime(String latestExecTime) {
+        this.latestExecTime = latestExecTime;
     }
 }

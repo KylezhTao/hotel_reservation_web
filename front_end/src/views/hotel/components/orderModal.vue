@@ -28,7 +28,7 @@
                 />
             </a-form-item>
             
-            <a-form-item v-bind="formItemLayout" label="入住日期">
+            <a-form-item v-bind="formItemLayout" label="日期段">
                 <a-range-picker :disabled-date="disabledDate"
                     format="YYYY-MM-DD"
                     @change="changeDate"
@@ -129,6 +129,12 @@
              <a-form-item v-bind="formItemLayout" label="结算后总价">
                 <span>￥{{ finalPrice }}</span>
             </a-form-item>
+            <a-alert
+                    message="注意："
+                    description="订单的最晚执行时间默认为入住日期当晚23点，请务必在之前于线下办理好入住手续，否则订单将自动置为异常，且同时扣除订单总价值的信用值，请知悉。"
+                    type="warning"
+                    show-icon
+            />
         </a-form>
     </a-modal>
 </template>

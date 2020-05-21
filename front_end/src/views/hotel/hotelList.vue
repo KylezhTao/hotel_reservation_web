@@ -14,6 +14,7 @@
                       </a-spin>
                   </a-layout-content>
               </a-layout>
+              <a-back-top />
           </a-tab-pane>
           <a-tab-pane tab="列表" key="2">
               <div class="table-operations" style="width: 100%; text-align: left; margin:20px 0">
@@ -243,8 +244,8 @@ const columns1 = [
                 value: '家庭房',
             },
         ],
-        filterMultiple: false,
-        onFilter: (value, record) => record.roomTypes.indexOf(value) !== -1,
+        filterMultiple: true,
+        onFilter: (value, record) => record.roomTypes.split('， ').indexOf(value) !== -1,
 
     },
     {

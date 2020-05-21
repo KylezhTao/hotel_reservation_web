@@ -14,6 +14,12 @@ export function getHotelByIdAPI(param) {
         method: 'GET',
     })
 }
+export function getCommentsByHotelIdAPI(param) {
+    return axios({
+        url: `${api.hotelPre}/${param.hotelId}/comments`,
+        method: 'GET',
+    })
+}
 
 
 // 把data改成param会出错，收不到请求主体（request payload）???

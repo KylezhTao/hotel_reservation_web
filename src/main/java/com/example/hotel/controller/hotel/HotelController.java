@@ -48,5 +48,10 @@ public class HotelController {
         return ResponseVO.buildSuccess(hotelService.retrieveHotelDetails(hotelId));
     }
 
+    @GetMapping("/{hotelId}/comments")
+    public ResponseVO retrieveHotelComments(@PathVariable Integer hotelId) {
+        return ResponseVO.buildSuccess(hotelService.retrieveHotelComments(hotelId));
+    }
+
 
 }

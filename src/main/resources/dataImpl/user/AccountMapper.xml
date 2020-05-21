@@ -5,6 +5,10 @@
         insert into User(email,password,username,phonenumber,birthday,credit,usertype)
         values(#{email},#{password},#{userName},#{phoneNumber},#{birthday},#{credit},#{userType})
     </insert>
+    <insert id="insertComment" parameterType="com.example.hotel.po.Comment" useGeneratedKeys="true" keyProperty="id">
+        insert into comment(hotelId, authorId, author, content, rate, datetime)
+        VALUES(#{hotelId},#{authorId},#{author},#{content},#{rate},#{datetime})
+    </insert>
     <select id="getAccountByName" resultMap="User">
         select * from User where email=#{email}
     </select>

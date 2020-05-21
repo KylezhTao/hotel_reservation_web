@@ -7,7 +7,6 @@
         @cancel="cancel"
         @ok="handleSubmit"
     >
-        <!-- 这里是添加策略模态框区域，请编写表单 -->
         <a-form :form="form" style="margin-top: 30px" v-bind="formItemLayout">
             <a-form-item label="优惠券类型" v-bind="formItemLayout">
                 <a-select
@@ -115,7 +114,6 @@ export default {
             'set_addCouponVisible'
         ]),
         ...mapActions([
-            // addHotelCoupon：添加酒店策略接口
             'addHotelTargetMoneyCoupon',
             'addHotelTimeCoupon',
             'addHotelTargetRoomCoupon'

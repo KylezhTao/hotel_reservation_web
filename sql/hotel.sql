@@ -81,7 +81,7 @@ CREATE TABLE `Hotel` (
 BEGIN;
 /*!40000 ALTER TABLE `Hotel` DISABLE KEYS */;
 INSERT INTO `Hotel` VALUES (1,'汉庭酒店','欢迎您入住','南京市玄武区珠江路268号','XiDan','Four','Wi-Fi',1829373819,4.32,1),(2,'儒家酒店','欢迎您入住','南京市鼓楼区珠江路268号','XiDan','Four','热水',1829373819,4.8,2),(3,'桂圆酒店','欢迎您入住','南京市栖霞区珠江路268号','XiDan','Three','叫醒服务',1829553719,4.8,6),
-                           (4,'7天连锁酒店','欢迎您入住','南京市浦口区珠江路268号','Xidan','Five','Wi-Fi, 热水, 叫醒服务',1829373621,4.6,6);
+                           (4,'7天连锁酒店','欢迎您入住','南京市浦口区珠江路268号','XiDan','Five','Wi-Fi, 热水, 叫醒服务',1829373621,4.6,6);
 /*!40000 ALTER TABLE `Hotel` ENABLE KEYS */;
 COMMIT;
 
@@ -99,6 +99,7 @@ CREATE TABLE `OrderList` (
   `hotelName` varchar(255) DEFAULT NULL,
   `checkInDate` varchar(255) DEFAULT NULL,
   `checkOutDate` varchar(255) DEFAULT NULL,
+  `latestExecTime` varchar(255) DEFAULT NULL,
   `roomType` varchar(255) DEFAULT NULL,
   `roomNum` int(255) DEFAULT NULL,
   `peopleNum` int(255) DEFAULT NULL,
@@ -117,9 +118,10 @@ CREATE TABLE `OrderList` (
 --
 
 /*!40000 ALTER TABLE `OrderList` DISABLE KEYS */;
-INSERT INTO `OrderList` VALUES (14,5,3,'桂圆酒店','2020-05-19','2020-05-25','Family',4,2,1,'2020-05-18',7961,'测试二号','12345678911','已预订'),
-                               (15,5,3,'桂圆酒店','2020-05-20','2020-05-23','Family',1,1,1,'2020-05-18',436,'测试二号','12345678911','已撤销'),
-                               (16,5,2,'儒家酒店','2020-05-21','2020-05-25','Family',2,1,0,'2020-05-18',1623,'测试二号','12345678911','已入住');
+INSERT INTO `OrderList` VALUES (14,5,3,'桂圆酒店','2020-05-19','2020-05-25','2020-05-19 23:00:00','Family',4,2,1,'2020-05-18 11:23:56',7961,'测试二号','12345678911','已预订'),
+                               (15,5,3,'桂圆酒店','2020-05-20','2020-05-23','2020-05-20 23:00:00','Family',1,1,1,'2020-05-18 16:11:01',436,'测试二号','12345678911','已撤销'),
+                               (16,5,2,'儒家酒店','2020-05-21','2020-05-25','2020-05-21 23:00:00','Family',2,1,0,'2020-05-18 16:30:23',1623,'测试二号','12345678911','已入住'),
+                               (17,5,4,'7天连锁酒店','2020-05-22','2020-05-27','2020-05-22 23:00:00','BigBed',3,1,0,'2020-05-19 17:49:09',1024,'测试二号','12345678911','异常');
 /*!40000 ALTER TABLE `OrderList` ENABLE KEYS */;
 
 --
@@ -146,7 +148,8 @@ CREATE TABLE `Room` (
 
 BEGIN;
 /*!40000 ALTER TABLE `Room` DISABLE KEYS */;
-INSERT INTO `Room` VALUES (2,199,20,20,1,'BigBed'),(3,299,30,30,1,'DoubleBed'),(4,399,10,10,1,'Family'),(6,399,3,10,2,'Family');
+INSERT INTO `Room` VALUES (2,199,20,20,1,'BigBed'),(3,299,30,30,1,'DoubleBed'),(4,399,10,10,1,'Family'),(5,155,30,30,4,'BigBed'),
+                          (6,399,3,10,2,'Family'),(7,249,9,9,3,'Family');
 /*!40000 ALTER TABLE `Room` ENABLE KEYS */;
 COMMIT;
 
@@ -166,6 +169,7 @@ CREATE TABLE `User` (
   `birthday` date DEFAULT NULL,
   `credit` double(255,0) DEFAULT NULL,
   `usertype` varchar(255) DEFAULT NULL,
+  `companyName` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -176,10 +180,54 @@ CREATE TABLE `User` (
 
 BEGIN;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (4,'1012681@qq.com','123456','测试一号','12345678919','2000-05-16',100,'Client'),(5,'123@qq.com','123456','测试二号','12345678911','1999-05-16',100,'Client'),(6,'333@qq.com','123456','酒店工作人员1',NULL,NULL,NULL,'HotelManager'),
-                          (7,'111@qq.com','123456','网站管理员admin',NULL,NULL,NULL,'Admin'),(8,'222@qq.com','123456','网站营销人员1',NULL,NULL,NULL,'Marketer');
+INSERT INTO `User` VALUES (4,'1012681@qq.com','123456','测试一号','12345678919','2000-05-16',100,'Client',NULL),(5,'123@qq.com','123456','测试二号','12345678911','1999-05-16',100,'Client',NULL),(6,'333@qq.com','123456','酒店工作人员1',NULL,NULL,NULL,'HotelManager',NULL),
+                          (7,'111@qq.com','123456','网站管理员admin',NULL,NULL,NULL,'Admin',NULL),(8,'222@qq.com','123456','网站营销人员1',NULL,NULL,NULL,'Marketer',NULL);
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 COMMIT;
+
+-- ----------------------------
+--  Table structure for `comment`
+-- ----------------------------
+
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE `comment` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `hotelId` int(11) NOT NULL,
+    `authorId` int(11) NOT NULL,
+    `author` varchar(255) DEFAULT NULL,
+    `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    `rate` double DEFAULT NULL,
+    `datetime` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `comment`
+--
+
+BEGIN;
+/*!40000 ALTER TABLE `comment` DISABLE KEYS */;
+INSERT INTO `comment` VALUES (19,3,5,'测试二号','这是测试评论一','5.0','2020-05-09 16:59:04'),(20,3,5,'测试二号','这是测试评论二\n11111111111111',4.0,'2020-05-09 16:59:04');
+/*!40000 ALTER TABLE `comment` ENABLE KEYS */;
+COMMIT;
+
+-- ----------------------------
+--  Table structure for `creditRecord`
+-- ----------------------------
+
+DROP TABLE IF EXISTS `creditRecord`;
+CREATE TABLE `creditRecord` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `clientId` int(11) NOT NULL,
+    `orderId` int(11) NOT NULL,
+    `datetime` datetime DEFAULT NULL,
+    `action` varchar(255) DEFAULT NULL,
+    `change` double(255,0) DEFAULT NULL,
+    `result` double(255,0) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

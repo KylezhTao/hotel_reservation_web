@@ -2,7 +2,9 @@ package com.example.hotel.blImpl.user;
 
 import com.example.hotel.bl.user.AccountService;
 import com.example.hotel.data.user.AccountMapper;
+import com.example.hotel.po.Comment;
 import com.example.hotel.po.User;
+import com.example.hotel.vo.CommentVO;
 import com.example.hotel.vo.UserForm;
 import com.example.hotel.vo.ResponseVO;
 import com.example.hotel.vo.UserVO;
@@ -17,6 +19,7 @@ import java.time.LocalDate;
 public class AccountServiceImpl implements AccountService {
     private final static String ACCOUNT_EXIST = "账号已存在";
     private final static String UPDATE_ERROR = "修改失败";
+    private final static String WRITE_ERROR = "评论失败";
     @Autowired
     private AccountMapper accountMapper;
 
@@ -58,6 +61,24 @@ public class AccountServiceImpl implements AccountService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseVO.buildFailure(UPDATE_ERROR);
+        }
+        return ResponseVO.buildSuccess(true);
+    }
+
+    @Override
+    public ResponseVO makeComment(int id, CommentVO commentVO){
+        try {
+            Comment comment = new Comment();
+            comment.setHotelId(commentVO.getHotelId());
+            comment.setAuthorId(id);
+            comment.setAuthor(commentVO.getAuthor());
+            comment.setContent(commentVO.getContent());
+            comment.setRate(commentVO.getRate());
+            comment.setDatetime(commentVO.getDatetime());
+            accountMapper.insertComment(comment);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseVO.buildFailure(WRITE_ERROR);
         }
         return ResponseVO.buildSuccess(true);
     }

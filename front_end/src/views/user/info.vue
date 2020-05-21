@@ -85,21 +85,31 @@
                 <a-table
                     :columns="columns"
                     :dataSource="userOrderList"
+                    class="components-table-demo-nested"
                     bordered
                 >
+                    <span slot="expandedRowRender" slot-scope="record" style="margin: 0">
+                        <a-tag>- 生成时间： {{ record.createDate }}</a-tag>
+                        <a-divider type="vertical"></a-divider>
+                        <a-tag>- 入住日期： {{ record.checkInDate }}</a-tag>
+                        <a-divider type="vertical"></a-divider>
+                        <a-tag>- 退房日期： {{record.checkOutDate}}</a-tag>
+                        <a-divider type="vertical"></a-divider>
+                        <a-tag>- 订单最晚执行时间： {{record.latestExecTime}}</a-tag>
+                    </span>
                     <span slot="price" slot-scope="text">
                         <span>￥{{ text }}</span>
                     </span>
                     <span slot="roomType" slot-scope="text">
-                        <span v-if="text === 'BigBed'">大床房</span>
-                        <span v-if="text === 'DoubleBed'">双床房</span>
-                        <span v-if="text === 'Family'">家庭房</span>
+                        <a-tag v-if="text === 'BigBed'">大床房</a-tag>
+                        <a-tag v-if="text === 'DoubleBed'">双床房</a-tag>
+                        <a-tag v-if="text === 'Family'">家庭房</a-tag>
                     </span>
                     <span slot="haveChild" slot-scope="text">
                         <span v-if="text === true">有</span>
                         <span v-if="text === false">无</span>
                     </span>
-                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':'#f50'" slot-scope="text">
+                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':text==='已撤销'?'#f6bb03':'#ff0000'" slot-scope="text">
                         {{ text }}
                     </a-tag>
                     <span slot="action" slot-scope="record">
@@ -114,7 +124,7 @@
                             <a-button type="danger" icon="undo" size="small">撤销</a-button>
                         </a-popconfirm>
                         <a-button type="primary" icon="edit" size="small"
-                                  @click="makeComment()"
+                                  @click=""
                                   v-if="record.orderState === '已入住'">
                             评价
                         </a-button>
@@ -137,10 +147,7 @@ const columns = [
         title: '订单号',
         dataIndex: 'id',
     },
-    {
-        title: '生成时间',
-        dataIndex: 'createDate',
-    },
+
     {  
         title: '酒店名',
         dataIndex: 'hotelName',
@@ -151,18 +158,8 @@ const columns = [
         scopedSlots: { customRender: 'roomType' }
     },
     {
-        title: '房间数量',
+        title: '数量',
         dataIndex: 'roomNum',
-    },
-    {
-        title: '入住时间',
-        dataIndex: 'checkInDate',
-        scopedSlots: { customRender: 'checkInDate' }
-    },
-    {
-        title: '离店时间',
-        dataIndex: 'checkOutDate',
-        scopedSlots: { customRender: 'checkOutDate' }
     },
     {
         title: '预计入住人数',

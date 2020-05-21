@@ -39,6 +39,11 @@ public class OrderController {
         return ResponseVO.buildSuccess(orderService.getUserOrders(userid));
     }
 
+    @GetMapping("/{userid}/{hotelid}/getUserHotelOrders")
+    public  ResponseVO retrieveUserOrders(@PathVariable int userid, @PathVariable int hotelid){
+        return ResponseVO.buildSuccess(orderService.getUserHotelOrders(userid, hotelid));
+    }
+
     @GetMapping("/{orderid}/annulOrder")
     public ResponseVO annulOrder(@PathVariable int orderid){
         return orderService.annulOrder(orderid);

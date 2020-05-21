@@ -31,6 +31,8 @@ public interface OrderService {
 
     List<Order> getManagerOrders(int userid);
 
+    List<Order> getUserHotelOrders(int userid, int hotelid);
+
     /**
      * 撤销订单
      * @param orderid

@@ -20,6 +20,9 @@
                         <span v-if="text === 'HotelManager'">酒店工作人员</span>
                         <span v-if="text === 'Marketer'">网站营销人员</span>
                     </span>
+                    <a slot="userName" slot-scope="text">
+                        {{ text }}
+                    </a>
                     <span slot="birthday" slot-scope="text">
                         <a-date-picker
                                 :default-value="moment(text)"
@@ -75,6 +78,7 @@ const columns = [
     {  
         title: '用户名',
         dataIndex: 'userName',
+        scopedSlots: { customRender: 'userName' },
     },
     {
         title: '用户密码',

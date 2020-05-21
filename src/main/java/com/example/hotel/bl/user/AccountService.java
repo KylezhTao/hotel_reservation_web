@@ -42,5 +42,7 @@ public interface AccountService {
      */
     ResponseVO updateUserInfo(int id, String password, String username, String phonenumber);
 
+    ResponseVO makeComment(int id, CommentVO commentVO);
+
 
 }

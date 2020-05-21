@@ -9,10 +9,21 @@
     <a-tooltip :title="hotel.title" placement="top">
       <a-card-meta :title="hotel.name">
       <template slot="description">
-        <a-rate style="font-size: 15px" :value="hotel.rate" disabled allowHalf>
-          <a-icon slot="character" type="heart" />
-        </a-rate>
-        <span class="ant-rate-text">{{hotel.rate}}分</span>
+        <a-statistic :value="hotel.rate"
+                     :precision="2"
+                     style="text-align: center"
+
+        >
+          <template #prefix>
+            <a-rate :value="hotel.rate" disabled allowHalf>
+              <a-icon slot="character" type="heart" />
+            </a-rate>
+          </template>
+          <template #suffix>
+            <span> / 5</span>
+
+          </template>
+        </a-statistic>
       </template>
     </a-card-meta>
     </a-tooltip>
@@ -35,9 +46,9 @@ export default {
     .hotelCard {
         margin: 10px 10px;
         min-width: 180px;
-        max-height: 350px;
+        max-height: 450px;
         img {
-          height: 250px;
+          height: 360px;
         }
     }
 </style>
@@ -52,5 +63,6 @@ export default {
 .ant-card-hoverable:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.4)
 }
+
 
 </style>

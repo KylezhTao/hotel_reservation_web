@@ -1,5 +1,6 @@
 package com.example.hotel.data.user;
 
+import com.example.hotel.po.Comment;
 import com.example.hotel.po.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -38,6 +39,8 @@ public interface AccountMapper {
      * @return
      */
      int updateAccount(@Param("id") int id, @Param("password") String password, @Param("userName") String username, @Param("phoneNumber") String phonenumber);
+
+     int insertComment(Comment comment);
 
 
 }

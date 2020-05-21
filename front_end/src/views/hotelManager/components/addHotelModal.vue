@@ -15,9 +15,13 @@
                 />
             </a-form-item>
             <a-form-item label="酒店地址" v-bind="formItemLayout">
+                <a-cascader :options="options" placeholder="请选择市、区"
+                            v-decorator="['city&distinct', { rules: [{ required: true, message: '请选择市、区' }] }]"
+
+                />
                 <a-input
-                    placeholder="请填写酒店地址"
-                    v-decorator="['address', { rules: [{ required: true, message: '请填写酒店地址' }] }]"
+                        placeholder="请填写具体地址"
+                        v-decorator="['specificAddress', { rules: [{ required: true, message: '请填写具体地址' }] }]"
                 />
             </a-form-item>
             <a-form-item label="酒店星级" v-bind="formItemLayout">
@@ -65,6 +69,50 @@ export default {
                     sm: { span: 16 },
                 },
             },
+            options: [
+                {
+                    value: '南京市',
+                    label: '南京市',
+                    children:[
+                        {
+                            value: '鼓楼区',
+                            label: '鼓楼区',
+                        },
+                        {
+                            value: '玄武区',
+                            label: '玄武区'
+                        },
+                        {
+                            value: '建邺区',
+                            label: '建邺区'
+                        },
+                        {
+                            value: '秦淮区',
+                            label: '秦淮区',
+                        },
+                        {
+                            value: '栖霞区',
+                            label: '栖霞区'
+                        },
+                        {
+                            value: '浦口区',
+                            label: '浦口区'
+                        },
+                        {
+                            value: '雨花台区',
+                            label: '雨花台区'
+                        },
+                        {
+                            value: '六合区',
+                            label: '六合区'
+                        },
+                        {
+                            value: '江宁区',
+                            label: '江宁区'
+                        },
+                    ]
+                }
+            ]
         }
     },
     computed: {
@@ -100,7 +148,7 @@ export default {
                     const data = {
                         name: this.form.getFieldValue('hotelName'),
                         description: this.form.getFieldValue('description'),
-                        address: this.form.getFieldValue('address'),
+                        address: this.form.getFieldValue('city&distinct').join('') + this.form.getFieldValue('specificAddress'),
                         phoneNum: this.form.getFieldValue('phoneNumber'),
                         hotelStar: this.form.getFieldValue('hotelStar'),
                         managerId: Number(this.userId)
