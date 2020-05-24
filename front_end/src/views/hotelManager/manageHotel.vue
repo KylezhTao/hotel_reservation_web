@@ -81,21 +81,21 @@
                         <span>￥{{ text }}</span>
                     </span>
                     <span slot="roomType" slot-scope="text">
-                        <span v-if="text === 'BigBed'">大床房</span>
-                        <span v-if="text === 'DoubleBed'">双床房</span>
-                        <span v-if="text === 'Family'">家庭房</span>
+                        <a-tag v-if="text === 'BigBed'">大床房</a-tag>
+                        <a-tag v-if="text === 'DoubleBed'">双床房</a-tag>
+                        <a-tag v-if="text === 'Family'">家庭房</a-tag>
                     </span>
                     <span slot="haveChild" slot-scope="text">
                         <span v-if="text === true">有</span>
                         <span v-if="text === false">无</span>
                     </span>
-                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':text==='已撤销'?'#e8e819':'#ff0000'" slot-scope="text">
+                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已执行'?'#87d068':text==='已撤销'?'#e8e819':'#ff0000'" slot-scope="text">
                         {{ text }}
                     </a-tag>
-                    <span slot="action" slot-scope="record, text">
+                    <span slot="action" slot-scope="record">
                         <a-button type="primary" size="small" icon="tool"
-                                  v-if="(userInfo.userType==='HotelManager' && text==='已预订' || text==='异常') ||
-                                        (userInfo.userType==='Marketer' && text==='异常')"
+                                  v-if="(userInfo.userType==='HotelManager' && record.orderState==='已预订' || record.orderState==='异常') ||
+                                        (userInfo.userType==='Marketer' && record.orderState==='异常')"
                                   @click="updateOrder(record)">更新订单信息</a-button>
                     </span>
                 </a-table>
@@ -105,6 +105,7 @@
         <AddHotelModal></AddHotelModal>
         <AddRoomModal></AddRoomModal>
         <Coupon></Coupon>
+        <UpdateOrderInfoModal></UpdateOrderInfoModal>
     </div>
 </template>
 
@@ -114,6 +115,7 @@ import AddHotelModal from './components/addHotelModal'
 import AddRoomModal from './components/addRoomModal'
 import Coupon from './components/coupon'
 import UpdateHotelInfoModal from './components/updateHotelInfoModal'
+import UpdateOrderInfoModal from './components/updateOrderInfoModal'
 const moment = require('moment')
 const columns1 = [
     {  
@@ -182,7 +184,7 @@ const columns2 = [
     },
     {
         title: '状态',
-        filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已入住', value: '已入住' }],
+        filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已执行', value: '已执行' }],
         onFilter: (value, record) => record.orderState.includes(value),
         dataIndex: 'orderState',
         scopedSlots: { customRender: 'orderState' }
@@ -211,6 +213,7 @@ export default {
         AddRoomModal,
         UpdateHotelInfoModal,
         Coupon,
+        UpdateOrderInfoModal,
     },
     computed: {
         ...mapGetters([
@@ -222,6 +225,7 @@ export default {
             'addHotelModalVisible',
             'addRoomModalVisible',
             'updateHotelInfoModalVisible',
+            'updateOrderInfoModalVisible',
             'activeHotelId',
             'couponVisible',
         ]),
@@ -235,10 +239,12 @@ export default {
     methods: {
         ...mapMutations([
             'set_updateHotelInfoModalVisible',
+            'set_updateOrderInfoModalVisible',
             'set_addHotelModalVisible',
             'set_addRoomModalVisible',
             'set_couponVisible',
             'set_activeHotelId',
+            'set_activeOrderId'
         ]),
         ...mapActions([
             'getUserInfo',
@@ -274,7 +280,8 @@ export default {
 
         },
         updateOrder(record){
-
+            this.set_activeOrderId(record.id)
+            this.set_updateOrderInfoModalVisible(true)
         },
     }
 }

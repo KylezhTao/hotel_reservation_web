@@ -9,35 +9,20 @@ import java.util.List;
 
 public interface OrderService {
 
-    /**
-     * 预订酒店
-     * @param orderVO
-     * @return
-     */
     ResponseVO addOrder(OrderVO orderVO);
 
-    /**
-     * 获得所有订单信息
-     * @return
-     */
     List<Order> getAllOrders();
 
-    /**
-     * 获得指定用户的所有订单信息
-     * @param userid
-     * @return
-     */
     List<Order> getUserOrders(int userid);
 
     List<Order> getManagerOrders(int userid);
 
     List<Order> getUserHotelOrders(int userid, int hotelid);
 
-    /**
-     * 撤销订单
-     * @param orderid
-     * @return
-     */
     ResponseVO annulOrder(int orderid);
+
+    ResponseVO updateOrder(int orderid, OrderVO orderVO);
+
+
 
 }

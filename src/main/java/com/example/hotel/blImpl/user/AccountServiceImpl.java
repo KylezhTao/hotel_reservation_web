@@ -3,6 +3,7 @@ package com.example.hotel.blImpl.user;
 import com.example.hotel.bl.user.AccountService;
 import com.example.hotel.data.user.AccountMapper;
 import com.example.hotel.po.Comment;
+import com.example.hotel.po.CreditRecord;
 import com.example.hotel.po.User;
 import com.example.hotel.vo.CommentVO;
 import com.example.hotel.vo.UserForm;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Service
@@ -52,6 +54,11 @@ public class AccountServiceImpl implements AccountService {
             return null;
         }
         return user;
+    }
+
+    @Override
+    public List<CreditRecord> retrieveUserCreditRecords(int id){
+        return accountMapper.selectUserCreditRecords(id);
     }
 
     @Override

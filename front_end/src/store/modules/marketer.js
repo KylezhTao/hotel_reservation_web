@@ -35,6 +35,7 @@ const marketer = {
         rechargeCredit: async({ commit, dispatch }, data) => {
             const res = await rechargeCreditAPI(data)
             if(res){
+                dispatch('getClientList')
                 commit('set_rechargeCreditModalVisible', false)
                 message.success('充值成功')
             }else{

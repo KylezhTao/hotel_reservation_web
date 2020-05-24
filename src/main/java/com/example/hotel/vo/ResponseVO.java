@@ -1,24 +1,11 @@
 package com.example.hotel.vo;
 
-/**
- * @author fjj
- * @date 2019/3/12 5:14 PM
- */
 public class ResponseVO {
 
-    /**
-     * 调用是否成功
-     */
     private Boolean success;
 
-    /**
-     * 返回的提示信息
-     */
     private String message;
 
-    /**
-     * 内容
-     */
     private Object content;
 
     public static ResponseVO buildSuccess(){

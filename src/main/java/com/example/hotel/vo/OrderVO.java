@@ -23,6 +23,7 @@ public class OrderVO {
     private String clientName;
     private String phoneNumber;
     private String orderState;
+    private int isHalf;
 
     public Integer getId() {
         return id;
@@ -150,5 +151,13 @@ public class OrderVO {
 
     public void setLatestExecTime(String latestExecTime) {
         this.latestExecTime = latestExecTime;
+    }
+
+    public int getIsHalf() {
+        return isHalf;
+    }
+
+    public void setIsHalf(int isHalf) {
+        this.isHalf = isHalf;
     }
 }

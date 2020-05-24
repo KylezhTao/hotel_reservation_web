@@ -4,6 +4,7 @@ import {
 } from '@/api/hotelManager'
 import {
     getAllOrdersAPI,
+    updateOrderInfoAPI
 } from '@/api/order'
 import {
     hotelAllCouponsAPI,
@@ -40,9 +41,11 @@ const hotelManager = {
         },
         addRoomModalVisible: false,
         updateHotelInfoModalVisible: false,
+        updateOrderInfoModalVisible: false,
         couponVisible: false,
         addCouponVisible: false,
         activeHotelId: 0,
+        activeOrderId: 0,
         couponList: [],
     },
     mutations: {
@@ -51,6 +54,9 @@ const hotelManager = {
         },
         set_updateHotelInfoModalVisible: function(state, data) {
             state.updateHotelInfoModalVisible = data
+        },
+        set_updateOrderInfoModalVisible: function(state, data) {
+            state.updateOrderInfoModalVisible = data
         },
         set_addHotelModalVisible: function(state, data) {
             state.addHotelModalVisible = data
@@ -75,6 +81,9 @@ const hotelManager = {
         },
         set_activeHotelId: function(state, data) {
             state.activeHotelId = data
+        },
+        set_activeOrderId: function(state, data){
+            state.activeOrderId = data
         },
         set_couponList: function(state, data) {
             state.couponList = data
@@ -179,6 +188,16 @@ const hotelManager = {
             if(res){
                 dispatch('getHotelById')
                 commit('set_updateHotelInfoModalVisible',false)
+                message.success('更新成功')
+            }
+        },
+        updateOrderInfo: async({ commit, state, dispatch}, data) => {
+
+            const res = await updateOrderInfoAPI(data)
+            if(res){
+                dispatch('getManagerOrders')
+                dispatch('getAllOrders')
+                commit('set_updateOrderInfoModalVisible',false)
                 message.success('更新成功')
             }
         },

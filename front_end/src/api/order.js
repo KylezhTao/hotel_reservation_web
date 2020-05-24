@@ -39,3 +39,10 @@ export function cancelOrderAPI(orderId) {
         method: 'GET',
     })
 }
+export function updateOrderInfoAPI(data) {
+    return axios({
+        url: `${api.orderPre}/${data.id}/update`,
+        method: 'POST',
+        data,
+    })
+}

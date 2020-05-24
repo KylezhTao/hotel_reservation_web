@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.hotel.data.user.AccountMapper">
     <insert id="createNewAccount" parameterType="com.example.hotel.po.User" useGeneratedKeys="true" keyProperty="id">
-        insert into User(email,password,username,phonenumber,birthday,credit,usertype)
-        values(#{email},#{password},#{userName},#{phoneNumber},#{birthday},#{credit},#{userType})
+        insert into User(email,password,username,phonenumber,birthday,credit,usertype,companyName)
+        values(#{email},#{password},#{userName},#{phoneNumber},#{birthday},#{credit},#{userType},#{companyName})
     </insert>
     <insert id="insertComment" parameterType="com.example.hotel.po.Comment" useGeneratedKeys="true" keyProperty="id">
         insert into comment(hotelId, authorId, author, content, rate, datetime)
@@ -21,6 +21,12 @@
         update User set username=#{userName},phonenumber=#{phoneNumber}
         where id=#{id} and #{password} is null
     </update>
+    <update id="updateCredit">
+        update User set credit=#{credit} where id=#{id}
+    </update>
+    <select id="selectUserCreditRecords" resultMap="CreditRecord">
+        select * from creditrecord where clientId=#{clientId}
+    </select>
 
 
     <resultMap id="User" type="com.example.hotel.po.User">
@@ -31,5 +37,14 @@
         <result column="phonenumber" property="phoneNumber"></result>
         <result column="credit" property="credit"></result>
         <result column="usertype" property="userType"></result>
+    </resultMap>
+    <resultMap id="CreditRecord" type="com.example.hotel.po.CreditRecord">
+        <id column="id" property="id"></id>
+        <result column="clientId" property="clientId"></result>
+        <result column="orderId" property="orderId"></result>
+        <result column="datetime" property="datetime"></result>
+        <result column="action" property="action"></result>
+        <result column="change" property="change"></result>
+        <result column="result" property="result"></result>
     </resultMap>
 </mapper>

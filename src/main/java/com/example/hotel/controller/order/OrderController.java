@@ -6,12 +6,6 @@ import com.example.hotel.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @Author: chenyizong
- * @Date: 2020-02-29
- */
-
-
 @RestController()
 @RequestMapping("/api/order")
 public class OrderController {
@@ -47,6 +41,11 @@ public class OrderController {
     @GetMapping("/{orderid}/annulOrder")
     public ResponseVO annulOrder(@PathVariable int orderid){
         return orderService.annulOrder(orderid);
+    }
+
+    @PostMapping("/{orderid}/update")
+    public ResponseVO updateOrder(@PathVariable int orderid, @RequestBody OrderVO orderVO){
+        return orderService.updateOrder(orderid, orderVO);
     }
 
 

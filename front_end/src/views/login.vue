@@ -63,6 +63,17 @@
 
         <a-tab-pane key="tab2" tab="注册新账号">
           <a-form-item>
+            <a-radio-group :default-value="1" @change="onChange"
+                    v-decorator="[
+                        'isNormalUser',
+                        { rules: [{required: true, message: '请选择注册会员类型', }] }
+                    ]"
+            >
+              <a-radio :value="1">普通会员</a-radio>
+              <a-radio :value="0">企业会员</a-radio>
+            </a-radio-group>
+          </a-form-item>
+          <a-form-item>
             <a-input
               size="large"
               type="email"
@@ -93,13 +104,22 @@
               <a-icon slot="prefix" type="book" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
-          <a-form-item >
+          <a-form-item v-if="this.isNormalUser===1">
             <a-date-picker
                     size="large"
                     format="YYYY-MM-DD"
                     placeholder="生日"
                     v-decorator="['birthday', { rules: [{ required: true, message: '请输入生日'}], validateTrigger: 'blur'}]"
             />
+          </a-form-item>
+          <a-form-item v-if="this.isNormalUser===0">
+            <a-input
+                    size="large"
+                    placeholder="公司名称"
+                    v-decorator="['company', { rules: [{ required: true, message: '请输入公司名称'}], validateTrigger: 'blur'}]"
+            >
+              <a-icon slot="prefix" type="idcard" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+            </a-input>
           </a-form-item>
           <a-form-item>
             <a-input-password allow-clear
@@ -147,6 +167,7 @@ export default {
   },
   data () {
     return {
+      isNormalUser: 1,
       customActiveKey: 'tab1',
       loginLoading: false,
       registerLoading: false,
@@ -229,6 +250,9 @@ export default {
         }
       })
     },
+    onChange(e) {
+      this.isNormalUser = e.target.value
+    },
 
     handleRegister() {
       const { form: { validateFields } } = this
@@ -241,7 +265,8 @@ export default {
             password: this.form.getFieldValue('registerPassword'),
             phoneNumber: this.form.getFieldValue('registerPhoneNumber'),
             userName: this.form.getFieldValue('registerUsername'),
-            birthday: moment(this.form.getFieldValue('birthday')),
+            birthday: this.isNormalUser===1?moment(this.form.getFieldValue('birthday')):'',
+            companyName: this.isNormalUser===0?this.form.getFieldValue('company'):'',
             credit: 100,
             userType: 0,
           }
@@ -249,6 +274,9 @@ export default {
             this.customActiveKey = 'tab1'
             this.form.setFieldsValue({
               'registerUserMail': '',
+              'registerUsername': '',
+              'registerPhoneNumber': '',
+              'company': '',
               'registerPassword': '',
               'registerPasswordconfirm': ''
             })

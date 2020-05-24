@@ -4,6 +4,8 @@ import com.example.hotel.bl.hotel.HotelService;
 import com.example.hotel.bl.order.OrderService;
 import com.example.hotel.bl.user.AccountService;
 import com.example.hotel.data.order.OrderMapper;
+import com.example.hotel.data.user.AccountMapper;
+import com.example.hotel.po.CreditRecord;
 import com.example.hotel.po.Order;
 import com.example.hotel.po.User;
 import com.example.hotel.vo.OrderVO;
@@ -13,13 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @Author: chenyizong
- * @Date: 2020-03-04
- */
 @Service
 public class OrderServiceImpl implements OrderService {
     private final static String RESERVE_ERROR = "预订失败";
@@ -32,6 +33,8 @@ public class OrderServiceImpl implements OrderService {
     HotelService hotelService;
     @Autowired
     AccountService accountService;
+    @Autowired
+    AccountMapper accountMapper;
 
     @Override
     public ResponseVO addOrder(OrderVO orderVO) {
@@ -85,15 +88,71 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseVO annulOrder(int orderid) {
-        //取消订单逻辑的具体实现（注意可能有和别的业务类之间的交互）
         try{
             Order order = orderMapper.getOrderById(orderid);
             int roomNum = -order.getRoomNum();
             hotelService.updateRoomInfo(order.getHotelId(), order.getRoomType(), roomNum);
             orderMapper.annulOrder(orderid);
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime latestExecTime = LocalDateTime.parse(order.getLatestExecTime(), fmt);
+            Duration duration = Duration.between(LocalDateTime.now(), latestExecTime);
+            CreditRecord record = new CreditRecord();
+            record.setOrderId(orderid);
+            record.setClientId(order.getUserId());
+            record.setDatetime(LocalDateTime.now());
+            record.setAction("订单撤销");
+            User user = accountService.getUserInfo(order.getUserId());
+            if(duration.toHours() < 6){
+                record.setChange(-order.getPrice()/2);
+            }else{
+                record.setChange(0);
+            }
+            record.setResult(user.getCredit() + record.getChange());
+            orderMapper.insertRecord(record);
+            accountMapper.updateCredit(user.getId(),record.getResult());
+
         }catch(Exception e){
             System.out.println(e.getMessage());
             return ResponseVO.buildFailure(ANNUL_ERROR);
+        }
+        return ResponseVO.buildSuccess(true);
+    }
+
+    @Override
+    public ResponseVO updateOrder(int orderid, OrderVO orderVO){
+        try{
+            Order order = orderMapper.getOrderById(orderid);
+            User user = accountService.getUserInfo(order.getUserId());
+            CreditRecord record = new CreditRecord();
+            record.setOrderId(orderid);
+            record.setClientId(order.getUserId());
+            record.setDatetime(LocalDateTime.now());
+            switch (orderVO.getOrderState()){
+                case "已执行":
+                    hotelService.updateRoomInfo(order.getHotelId(),order.getRoomType(),-order.getRoomNum());
+                    orderMapper.updateOrder(orderid,orderVO.getOrderState());
+                    record.setAction("订单执行");
+                    record.setChange(order.getPrice());
+                    break;
+                case "已撤销":
+                    orderMapper.updateOrder(orderid,orderVO.getOrderState());
+                    record.setAction("订单申诉");
+                    record.setChange(orderVO.getIsHalf()==1?order.getPrice()/2:order.getPrice());
+                    break;
+                case "异常":
+                    orderMapper.updateOrder(orderid,orderVO.getOrderState());
+                    record.setAction("订单异常");
+                    record.setChange(-order.getPrice());
+
+            }
+            double res = record.getChange() + user.getCredit();
+            record.setResult(res);
+            orderMapper.insertRecord(record);
+            accountMapper.updateCredit(user.getId(),res);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return ResponseVO.buildFailure("更新订单信息失败");
         }
         return ResponseVO.buildSuccess(true);
     }

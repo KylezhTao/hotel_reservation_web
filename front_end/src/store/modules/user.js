@@ -8,6 +8,7 @@ import {
     getUserInfoAPI,
     updateUserInfoAPI,
     makeCommentAPI,
+    getUserCreditRecordsAPI
 } from '@/api/user'
 
 import {
@@ -32,7 +33,10 @@ const getDefaultState = () => {
         ],
         userHotelOrderList: [
 
-        ]
+        ],
+        userCreditRecordList: [
+
+        ],
     }
 }
 
@@ -75,6 +79,9 @@ const user = {
         set_userHotelOrderList: function(state, data) {
             state.userHotelOrderList = data
         },
+        set_userCreditRecordList: function (state, data) {
+            state.userCreditRecordList = data
+        }
     },
 
     actions: {
@@ -133,6 +140,15 @@ const user = {
             const res = await getUserOrdersAPI(data)
             if(res){
                 commit('set_userOrderList', res)
+            }
+        },
+        getUserCreditRecords: async({ state, commit }) => {
+            const data = {
+                clientId: Number(state.userId)
+            }
+            const res = await getUserCreditRecordsAPI(data)
+            if(res){
+                commit('set_userCreditRecordList', res)
             }
         },
         getManagerOrders: async({ state, commit }) => { // my -> manager

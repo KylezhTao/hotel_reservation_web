@@ -40,6 +40,11 @@ public class AccountController {
         return ResponseVO.buildSuccess(user);
     }
 
+    @GetMapping("/{id}/getUserCreditRecords")
+    public ResponseVO getUserCreditRecords(@PathVariable int id){
+        return ResponseVO.buildSuccess(accountService.retrieveUserCreditRecords(id));
+    }
+
     @PostMapping("/{id}/update")
     public ResponseVO updateInfo(@RequestBody UserInfoVO userInfoVO, @PathVariable int id){
         return accountService.updateUserInfo(id,userInfoVO.getPassword(),userInfoVO.getUserName(),userInfoVO.getPhoneNumber());

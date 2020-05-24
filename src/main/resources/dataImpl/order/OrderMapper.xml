@@ -26,6 +26,13 @@
     <update id="annulOrder">
         update OrderList set orderState='已撤销' where id=#{orderid}
     </update>
+    <update id="updateOrder">
+        update orderlist set orderState=#{orderState} where id=#{id}
+    </update>
+    <insert id="insertRecord" parameterType="com.example.hotel.po.CreditRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into creditrecord(clientId, orderId, datetime, action, `change`, result)
+        values (#{clientId},#{orderId},#{datetime},#{action},#{change},#{result})
+    </insert>
 
 
     <resultMap id="Order" type="com.example.hotel.po.Order">

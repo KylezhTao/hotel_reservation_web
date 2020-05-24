@@ -88,7 +88,7 @@
                         <span v-if="text === true">有</span>
                         <span v-if="text === false">无</span>
                     </span>
-                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':text==='已撤销'?'#f6bb03':'#ff0000'" slot-scope="text">
+                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已执行'?'#87d068':text==='已撤销'?'#f6bb03':'#ff0000'" slot-scope="text">
                         {{ text }}
                     </a-tag>
                     <span slot="action" slot-scope="record">
@@ -106,7 +106,7 @@
                     </span>
                         </a-table>
                     </a-tab-pane>
-                    <a-tab-pane tab="评论" key="4">
+                    <a-tab-pane tab="评价" key="4">
                         <div class="comment">
                             <a-list
                                     v-if="commentsOfHotel.length"
@@ -212,7 +212,7 @@ const columns = [
     },
     {
         title: '状态',
-        filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已入住', value: '已入住' }],
+        filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已执行', value: '已执行' }],
         onFilter: (value, record) => record.orderState.includes(value),
         dataIndex: 'orderState',
         scopedSlots: { customRender: 'orderState' }
@@ -253,7 +253,7 @@ export default {
         this.getUserInfo()
         await this.getUserHotelOrders(this.currentHotelId)
         await this.getCommentsByHotelId()
-        this.hasStayed = this.userHotelOrderList.filter(item => item.orderState === '已入住').length !== 0
+        this.hasStayed = this.userHotelOrderList.filter(item => item.orderState === '已执行').length !== 0
     },
     beforeRouteUpdate(to, from, next) {
         this.set_currentHotelId(Number(to.params.hotelId))

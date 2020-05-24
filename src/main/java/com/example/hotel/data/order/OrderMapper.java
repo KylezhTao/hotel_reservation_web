@@ -1,5 +1,6 @@
 package com.example.hotel.data.order;
 
+import com.example.hotel.po.CreditRecord;
 import com.example.hotel.po.Order;
 import com.example.hotel.vo.OrderVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -8,10 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * @Author: chenyizong
- * @Date: 2020-03-04
- */
+
 @Mapper
 @Repository
 public interface OrderMapper {
@@ -29,5 +27,9 @@ public interface OrderMapper {
     int annulOrder(@Param("orderid") int orderid);
 
     Order getOrderById(@Param("orderid") int orderid);
+
+    int updateOrder(@Param("id") int id, @Param("orderState") String orderState);
+
+    int insertRecord(CreditRecord record);
 
 }

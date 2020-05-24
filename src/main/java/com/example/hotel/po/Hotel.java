@@ -8,18 +8,12 @@ public class Hotel {
     private Integer id;
     private String hotelName;
     private String address;
-    /**
-     * 商圈
-     */
     private BizRegion bizRegion;
     private HotelStar hotelStar;
     private Double rate;
     private String description;
     private String phoneNum;
     private HotelService hotelService;
-    /**
-     * 酒店管理员id
-     */
     private Integer managerId;
 
     public Integer getId() {

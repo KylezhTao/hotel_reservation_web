@@ -109,7 +109,7 @@
                         <span v-if="text === true">有</span>
                         <span v-if="text === false">无</span>
                     </span>
-                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已入住'?'#87d068':text==='已撤销'?'#f6bb03':'#ff0000'" slot-scope="text">
+                    <a-tag slot="orderState" :color="text==='已预订'?'#108ee9':text==='已执行'?'#87d068':text==='已撤销'?'#f6bb03':'#ff0000'" slot-scope="text">
                         {{ text }}
                     </a-tag>
                     <span slot="action" slot-scope="record">
@@ -124,8 +124,9 @@
                             <a-button type="danger" icon="undo" size="small">撤销</a-button>
                         </a-popconfirm>
                         <a-button type="primary" icon="edit" size="small"
-                                  @click=""
-                                  v-if="record.orderState === '已入住'">
+                                  v-if="record.orderState === '已执行'"
+                                  @click.native="jumpToDetails(record.hotelId)"
+                        >
                             评价
                         </a-button>
                         
@@ -134,7 +135,25 @@
             </a-tab-pane>
 
             <a-tab-pane v-if='userInfo.userType==="Client"' tab="信用记录" key="3">
-
+                <a-table
+                        :columns="columns2"
+                        :dataSource="userCreditRecordList"
+                        class="components-table-demo-nested"
+                        bordered
+                >
+                    <span slot="datetime" slot-scope="text">
+                        <a-tag >{{ text }}</a-tag>
+                    </span>
+                    <span slot="action" slot-scope="text">
+                        <a-tag v-if="text==='充值'" :color="'#108ee9'" ><a-icon type="money-collect"/> {{ text }}</a-tag>
+                        <a-tag v-if="text==='订单撤销'" :color="'#e96e10'" ><a-icon type="undo"/> {{ text }}</a-tag>
+                        <a-tag v-if="text==='订单执行'" :color="'#28ac03'" ><a-icon type="check"/> {{ text }}</a-tag>
+                        <a-tag v-if="text==='订单异常'" :color="'#fd045b'" ><a-icon type="question"/> {{ text }}</a-tag>
+                    </span>
+                    <span slot="change" slot-scope="text">
+                        <a-tag :color="text >= 0?'#27c405':'#f82d2d'" >{{ text>=0?"+ "+text:"- " + -text }}</a-tag>
+                    </span>
+                </a-table>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -147,7 +166,6 @@ const columns = [
         title: '订单号',
         dataIndex: 'id',
     },
-
     {  
         title: '酒店名',
         dataIndex: 'hotelName',
@@ -176,7 +194,7 @@ const columns = [
     },
     {
         title: '状态',
-        filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已入住', value: '已入住' }],
+        filters: [{ text: '已预订', value: '已预订' }, { text: '已撤销', value: '已撤销' }, { text: '已执行', value: '已执行' }],
         onFilter: (value, record) => record.orderState.includes(value),
         dataIndex: 'orderState',
         scopedSlots: { customRender: 'orderState' }
@@ -188,6 +206,36 @@ const columns = [
     },
     
   ];
+const columns2 = [
+    {
+        title: '记录号',
+        dataIndex: 'id',
+    },
+    {
+        title: '时间',
+        dataIndex: 'datetime',
+        scopedSlots: { customRender: 'datetime' }
+    },
+    {
+        title: '订单号',
+        dataIndex: 'orderId',
+    },
+    {
+        title: '动作',
+        dataIndex: 'action',
+        scopedSlots: { customRender: 'action' }
+    },
+    {
+        title: '信用值变化',
+        dataIndex: 'change',
+        scopedSlots: { customRender: 'change' }
+    },
+    {
+        title: '信用值结果',
+        dataIndex: 'result',
+        scopedSlots: { customRender: 'result' }
+    },
+]
 export default {
     name: 'info',
     data(){
@@ -198,6 +246,7 @@ export default {
             formLayout: 'horizontal',
             pagination: {},
             columns,
+            columns2,
             data: [],
             form: this.$form.createForm(this, { name: 'coordinated' }),
         }
@@ -208,19 +257,22 @@ export default {
         ...mapGetters([
             'userId',
             'userInfo',
-            'userOrderList'
+            'userOrderList',
+            'userCreditRecordList'
         ])
     },
     async mounted() {
         await this.getUserInfo()
         await this.getUserOrders()
+        await this.getUserCreditRecords()
     },
     methods: {
         ...mapActions([
             'getUserInfo',
             'getUserOrders',
             'updateUserInfo',
-            'cancelOrder'
+            'cancelOrder',
+            'getUserCreditRecords'
         ]),
         moment,
         handleChange(e) {
@@ -290,7 +342,10 @@ export default {
         },
         cancelCancelOrder() {
 
-        }
+        },
+        jumpToDetails(id){
+            this.$router.push({ name: 'hotelDetail', params: { hotelId: id }})
+        },
         
     }
 }

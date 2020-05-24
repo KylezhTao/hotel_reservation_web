@@ -33,7 +33,7 @@ const columns = [
       scopedSlots: { customRender: 'roomType'}
     },
     {
-        title: '剩余数量',
+        title: '现有数量',
         dataIndex: 'curNum',
         key: 'curNum',
     },
