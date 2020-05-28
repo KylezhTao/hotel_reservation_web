@@ -36,6 +36,9 @@
                     <a-form-item label="信用值" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
                         <span>{{ userInfo.credit }}</span>
                     </a-form-item>
+                    <a-form-item label="公司名" :label-col="{ span: 3 }" :wrapper-col="{ span: 8, offset: 1 }">
+                        <span>{{ userInfo.companyName }}</span>
+                    </a-form-item>
                     <a-form-item v-if="modify" :label-col="{span: 4}" :wrapper-col="{span: 8, offset: 4}">
                         <a-checkbox :checked="checkPassword" @change="handleChange">
                             若想修改密码，请勾选此项
@@ -64,7 +67,6 @@
                                 @blur="handleConfirmBlur"
                         />
                     </a-form-item>
-
                     <a-form-item :wrapper-col="{ span: 12, offset: 5 }" v-if="modify">
                         <a-button type="primary" @click="saveModify">
                             保存
@@ -80,7 +82,6 @@
                     </a-form-item>
                 </a-form>
             </a-tab-pane>
-
             <a-tab-pane tab="我的订单" key="2">
                 <a-table
                     :columns="columns"
@@ -329,7 +330,8 @@ export default {
                 this.form.setFieldsValue({
                     'userName': this.userInfo.userName,
                     'phoneNumber': this.userInfo.phoneNumber,
-                    'birthday': this.userInfo.birthday
+                    'birthday': this.userInfo.birthday,
+                    'companyName': this.userInfo.companyName,
                 })
             }, 0)
             this.modify = true

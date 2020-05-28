@@ -207,7 +207,7 @@ CREATE TABLE `comment` (
 
 BEGIN;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-INSERT INTO `comment` VALUES (19,3,5,'测试二号','这是测试评论一','5.0','2020-05-09 16:59:04'),(20,3,5,'测试二号','这是测试评论二\n11111111111111',4.0,'2020-05-09 16:59:04');
+INSERT INTO `comment` VALUES (19,3,5,'测试二号','这是测试评论一','5.0','2020-05-09 16:59:04'),(20,3,5,'测试二号','这是测试评论二\n11111111111111111',4.0,'2020-05-09 16:59:04');
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 COMMIT;
 
