@@ -150,6 +150,7 @@
                         <a-tag v-if="text==='订单撤销'" :color="'#e96e10'" ><a-icon type="undo"/> {{ text }}</a-tag>
                         <a-tag v-if="text==='订单执行'" :color="'#28ac03'" ><a-icon type="check"/> {{ text }}</a-tag>
                         <a-tag v-if="text==='订单异常'" :color="'#fd045b'" ><a-icon type="question"/> {{ text }}</a-tag>
+                        <a-tag v-if="text==='订单申诉'" :color="'#25c9bb'" ><a-icon type="message"/> {{ text }}</a-tag>
                     </span>
                     <span slot="change" slot-scope="text">
                         <a-tag :color="text >= 0?'#27c405':'#f82d2d'" >{{ text>=0?"+ "+text:"- " + -text }}</a-tag>

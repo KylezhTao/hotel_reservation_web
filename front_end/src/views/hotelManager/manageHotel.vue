@@ -96,7 +96,7 @@
                         <a-button type="primary" size="small" icon="tool"
                                   v-if="(userInfo.userType==='HotelManager' && record.orderState==='已预订' || record.orderState==='异常') ||
                                         (userInfo.userType==='Marketer' && record.orderState==='异常')"
-                                  @click="updateOrder(record)">更新订单信息</a-button>
+                                  @click="updateOrder(record)">变更订单状态</a-button>
                     </span>
                 </a-table>
             </a-tab-pane>

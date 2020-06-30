@@ -7,7 +7,7 @@
             @cancel="cancel"
             @ok="handleSubmit"
     >
-        <a-Form :form="form">
+        <a-form :form="form">
             <a-form-item v-bind="formItemLayout" label="用户邮箱">
                 <a-input
                         v-decorator="[
@@ -24,7 +24,7 @@
                     ]"
                 />
             </a-form-item >
-        </a-Form>
+        </a-form>
     </a-modal>
 </template>
 <script>
@@ -65,7 +65,7 @@
                 'addMarketer',
             ]),
             cancel() {
-                this.set_addManagerModalVisible(false)
+                this.set_addMarketerModalVisible(false)
             },
             handleSubmit(e) {
                 e.preventDefault();
