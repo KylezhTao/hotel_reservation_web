@@ -47,7 +47,7 @@ CREATE TABLE `Coupon` (
 --
 BEGIN;
 /*!40000 ALTER TABLE `Coupon` DISABLE KEYS */;
-INSERT INTO `Coupon` VALUES (2,'满500-100优惠',2,3,'满减优惠1',NULL,500,0,1,NULL,NULL,100),(3,'立减40',-1,4,'网站限时优惠1',NULL,0,0,1,'2020-05-13 14:22:36','2020-05-30 14:22:36',40),
+INSERT INTO `Coupon` VALUES (2,'满500-100优惠',2,3,'满减优惠1',NULL,500,0,1,NULL,NULL,100),(3,'立减40',-1,4,'网站限时优惠1',NULL,0,0,1,'2020-06-13 14:22:36','2020-07-30 14:22:36',40),
                             (4,'3间以上85折',2,2,'多间优惠1',3,0,-0.15,1,NULL,NULL,0),(5,'满199减50',2,1,'生日特惠1',NULL,199,0,1,NULL,NULL,50);
 /*!40000 ALTER TABLE `Coupon` ENABLE KEYS */;
 COMMIT;

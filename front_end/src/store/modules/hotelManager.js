@@ -192,7 +192,6 @@ const hotelManager = {
             }
         },
         updateOrderInfo: async({ commit, state, dispatch}, data) => {
-
             const res = await updateOrderInfoAPI(data)
             if(res){
                 dispatch('getManagerOrders')

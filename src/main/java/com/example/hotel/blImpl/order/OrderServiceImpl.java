@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
             System.out.println(e.getMessage());
             return ResponseVO.buildFailure(RESERVE_ERROR);
         }
-       return ResponseVO.buildSuccess(true);
+        return ResponseVO.buildSuccess(true);
     }
 
     @Override
@@ -110,12 +110,11 @@ public class OrderServiceImpl implements OrderService {
             record.setResult(user.getCredit() + record.getChange());
             orderMapper.insertRecord(record);
             accountMapper.updateCredit(user.getId(),record.getResult());
-
+            return ResponseVO.buildSuccess(true);
         }catch(Exception e){
             System.out.println(e.getMessage());
             return ResponseVO.buildFailure(ANNUL_ERROR);
         }
-        return ResponseVO.buildSuccess(true);
     }
 
     @Override
@@ -152,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
         }catch (Exception e){
             e.printStackTrace();
             System.out.println(e.getMessage());
-            return ResponseVO.buildFailure("更新订单信息失败");
+            return ResponseVO.buildFailure("变更订单状态失败");
         }
         return ResponseVO.buildSuccess(true);
     }

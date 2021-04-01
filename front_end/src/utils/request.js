@@ -12,7 +12,7 @@ const service = axios.create({
   withCredentials: true
 })
 console.log(process.env.NODE_ENV)
- const err = (error) => { 
+const err = (error) => { 
   if (error.response) {
     const data = error.response.data
     const token = Vue.ls.get('ACCESS_TOKEN')
@@ -37,7 +37,7 @@ console.log(process.env.NODE_ENV)
     }
   }
   return Promise.reject(error)
- }
+}
 
 //request incerceptor
 service.interceptors.request.use((config) => {

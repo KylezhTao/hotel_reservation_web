@@ -35,7 +35,7 @@ public interface CouponService {
     CouponVO addHotelTimeCoupon(TimeCouponVO couponVO);
 
     /**
-     * 添加酒店限时优惠策略
+     * 添加酒店多间优惠策略
      * @param couponVO
      * @return
      */

@@ -116,7 +116,6 @@ import AddRoomModal from './components/addRoomModal'
 import Coupon from './components/coupon'
 import UpdateHotelInfoModal from './components/updateHotelInfoModal'
 import UpdateOrderInfoModal from './components/updateOrderInfoModal'
-const moment = require('moment')
 const columns1 = [
     {  
         title: '酒店名',
